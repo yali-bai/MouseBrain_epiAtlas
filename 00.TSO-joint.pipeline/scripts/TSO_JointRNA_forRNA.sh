@@ -9,7 +9,7 @@ species=hg38
 
 ddate=`date -R|awk '{print $2$3}'`
 
-src_dir=/share/analysisdata/Methyl/workflow/TSO_HT/src/Pipeline/TSO_joint_RNA_src_240809
+src_dir=00.TSO-joint.pipeline
 
 
 temp=`getopt -o i:o:s:p:m:t: --long indir:,outdir:,sep_type:,prefix:,thread:,read_len:,species:,seq_type:,partition: -- "$@"`
@@ -49,7 +49,7 @@ mkdir -p $outdir/run_logs
 LOG_DIR=$outdir/run_logs
 
 function pip_run {
-pip_sh=$src_dir/scripts/pip.forRNA.20231115.sh
+pip_sh=$src_dir/scripts/pip.forRNA.sh
 
 find $indir -maxdepth 1 -name "${prefix}*.f*q.gz" -print |sort --version-sort | xargs -L2 |column -t |while read reads
 do
