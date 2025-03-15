@@ -1,10 +1,10 @@
 #!/usr/bin/bash
 
 ## software location ##
-seqkit='/share/home/fany/miniconda3/bin/seqkit'
+seqkit='$PATH/miniconda3/bin/seqkit'
 fastq_multx='/share/analysisdata/Methyl/Pipeline/TSO_2.0/scripts/fastq-multx'
 python='/share/home/fany/miniconda3/envs/python2/bin/python'
-src=/share/analysisdata/Methyl/Pipeline/TSO_2.0
+src=../00.TSO-joint.pipeline
 
 function sep_reads {
 id=$1
@@ -63,7 +63,7 @@ indir=raw_data
 ls  $indir|grep "R1.fastq"|sed 's/.R1.fastq.*//g' |grep -v "Balance"|while read ff # extract plate info
 do
   echo $ff # for example: P56_Male_230131Mouse1_DeepCortex_EXP230202_TSO_5hmC_plate9
-  sep_reads $ff ../input/00-pipeline/V2_TSO_Barcode_for_fastq_multx.220108.txt Output_s1/sep_cell $indir
+  sep_reads $ff $src/data/V2_TSO_Barcode_for_fastq_multx.220108.txt Output_s1/sep_cell $indir
 
 done
 }
