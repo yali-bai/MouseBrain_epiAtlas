@@ -18,8 +18,6 @@ import traceback
 New flag: 
 read old sta & end: ("SE", '%s,%s'%(old_sta, old_end)),
 frag old sta & end: ("FG", '%s,%s'%(fragment_5_end, fragment_3_end)),
-update by Bailey; 20200606
-update by Liuhao Ren for restarting apply_async; 20240813
 
 '''
 
