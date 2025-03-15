@@ -1,22 +1,22 @@
 #!/usr/bin/bash
 ## language
-python=/share/home/fany/miniconda3/envs/python2/bin/python
-Rscript=/share/home/fany/software/conda_software/Rscript
-python3=/share/analysisdata/Methyl/workflow/software/miniconda/envs/bioinfo/bin/python
+python=$PATH/python
+Rscript=$PATH/Rscript
+python3=$PATH/python
 
 ## soft Path
-picard=/share/home/fany/miniconda3/bin/picard
-samtools=/share/home/fany/miniconda3/bin/samtools
-bedtools=/share/home/fany/miniconda3/bin/bedtools
-sambamba=/share/home/fany/miniconda3/bin/sambamba
-STAR=/share/analysisdata/Methyl/workflow/software/miniconda/envs/bioinfo/bin/STAR
-qualimap=/share/analysisdata/Methyl/workflow/software/miniconda/envs/bioinfo/bin/qualimap
-featureCounts=/share/analysisdata/Methyl/workflow/software/miniconda/envs/bioinfo/bin/featureCounts
-trim_galore=/share/home/fany/miniconda3/bin/trim_galore
-cutadapt=/share/home/fany/miniconda3/bin/cutadapt
+picard=$PATH/miniconda3/bin/picard
+samtools=$PATH/miniconda3/bin/samtools
+bedtools=$PATH/miniconda3/bin/bedtools
+sambamba=$PATH/miniconda3/bin/sambamba
+STAR=$PATH/miniconda3/bin/STAR
+qualimap=$PATH/miniconda3/bin/qualimap
+featureCounts=$PATH/miniconda3/bin/featureCounts
+trim_galore=$PATH/miniconda3/bin/trim_galore
+cutadapt=$PATH/miniconda3/bin/cutadapt
 ## home made code
 SRC_DIR=`pwd`/../
-SRC_DIR=/share/analysisdata/Methyl/workflow/TSO_HT/src/Pipeline/TSO_joint_RNA_src_240809
+SRC_DIR=../../00.TSO-joint.pipeline
 
 
 Remove_mC_filledGap=$SRC_DIR/scripts/Remove_mC_filledGap.py
@@ -84,10 +84,7 @@ Ref_gtf["mm10"]=$mm10_gtf
 declare -A Ref_bed
 Ref_bed["hg38"]=$hg38_gene_bed
 
-
-
 m_threshold=0.5
-
 
 module load java/1.8.0
 ## Args
