@@ -1,6 +1,7 @@
 
 The preprocess of TSO-joint datasets
 
+![image](https://github.com/yali-bai/MouseBrain_epiAtlas/blob/main/00.TSO-joint.pipeline/data/TSO-joint.png)
 ### 1. Separate single cell 
 Separate single cell from a mixture plate by single cell barcode
 
