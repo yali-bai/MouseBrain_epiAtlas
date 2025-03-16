@@ -1,0 +1,2 @@
+01-plot_ATAC_open_close_peak_CG_methylation_ratio: This script is used to plot the differences in DNA methylation ratios (CG) between aging and young mice on open and closed peaks for different subclasses.
+02-plot_ATAC_open_close_peak_CH_methylation_ratio: This script is used to plot the differences in DNA methylation ratios (CH) between aging and young mice on open and closed peaks for different subclasses.

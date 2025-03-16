@@ -1,0 +1,1 @@
+01. intergrate_with_some_region_of_zeng.using_selectable_markers.R: integration of Joint-Cabernet all samples and Zeng 10X RNA, output allc file for all subclasses and ages, and output a metainfo containing QC, unique_id, celltype.

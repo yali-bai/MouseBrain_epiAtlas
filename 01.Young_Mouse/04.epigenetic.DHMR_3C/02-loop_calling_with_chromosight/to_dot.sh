@@ -1,0 +1,1 @@
+python work_dot.py $1
