@@ -1,8 +1,8 @@
 #!/usr/bin/bash
 
 
-src_dir=/share/analysisdata/Methyl/workflow/TSO_HT/src/Pipeline/TSO_joint_RNA_src_240809/scripts
-run_script=${src_dir}/TSO_JointRNA_forRNA.20231115.sh
+src_dir=../00.TSO-joint.pipeline/scripts
+run_script=${src_dir}/TSO_JointRNA_forRNA.sh
 
 
 function run_pip {
