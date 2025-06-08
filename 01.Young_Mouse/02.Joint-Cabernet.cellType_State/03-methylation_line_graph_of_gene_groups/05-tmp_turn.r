@@ -4,7 +4,7 @@ library(data.table)
 # "indir" is a custom input path, and "outdir" is a custom output path.
 # indir=""
 # outdir=""
-class<-read.table("../../../input/01-youth/subclass_order_for_integration_with_zeng.txt",sep='\n')
+class<-read.table("../../../04.data/04.config_files/subclass_order_for_integration_with_zeng.txt",sep='\n')
 class<-gsub("/",".",class[,1])
 class<-gsub(" ",".",class)
 class<-gsub("-",".",class)
