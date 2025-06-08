@@ -55,7 +55,7 @@ runAnalysis <- function(meta){
   mat <- mat[rownames(mat) %in% mouse_geneID$gene_id,]
   mat <- mat[!duplicated(rownames(mat)),]
   
-  mm10_geneID <- read.delim("../../../input/reference_genome/mm10_vM18.genes.bed",header=T)  
+  mm10_geneID <- read.delim("../../../04.data/01.ref/mm10_vM18.genes.bed",header=T)  
   #colnames(mm10_geneID) <- c("gene_id","gene_name")
   mm10 <- data.frame(gene_id_long=mm10_geneID$gene_id,gene_id_short=mouse_geneID$gene_id)
   
