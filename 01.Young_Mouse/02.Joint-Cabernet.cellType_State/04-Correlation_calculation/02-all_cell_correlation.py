@@ -1,5 +1,3 @@
-#########    All "our" in the following code refers to Joint Cabernet.
-
 # "indir" is a custom input path, and "outdir" is a custom output path.
 # indir=""
 # outdir=""
@@ -16,21 +14,21 @@ from statsmodels.stats.multitest import multipletests
 
 def allcell_correlation(datatype,var_dim,mc_type):
     #RNA
-    our_RNA=sc.read_h5ad(f"{indir}/our_RNA_annotated_latest.h5ad")
-    if issparse(our_RNA.X):  
-        X_dense = our_RNA.X.toarray()  
+    Joint_Cabernet_RNA=sc.read_h5ad(f"{indir}/Joint_Cabernet_RNA_annotated_latest.h5ad")
+    if issparse(Joint_Cabernet_RNA.X):  
+        X_dense = Joint_Cabernet_RNA.X.toarray()  
     else:  
-        X_dense = our_RNA.X
-    our_RNA_count= pd.DataFrame(X_dense, columns=our_RNA.var_names) 
-    our_RNA_count.index=our_RNA.obs.index
+        X_dense = Joint_Cabernet_RNA.X
+    Joint_Cabernet_RNA_count= pd.DataFrame(X_dense, columns=Joint_Cabernet_RNA.var_names) 
+    Joint_Cabernet_RNA_count.index=Joint_Cabernet_RNA.obs.index
     #Extract neuron cells
-    our_RNA_count=our_RNA_count.loc[our_RNA.obs.index[our_RNA.obs['Neuron_non_neuron']=="Neuron"],:]
-    our_RNA_count.index=[re.sub(r'.*@@', 'allc', s) for s in our_RNA_count.index]
+    Joint_Cabernet_RNA_count=Joint_Cabernet_RNA_count.loc[Joint_Cabernet_RNA.obs.index[Joint_Cabernet_RNA.obs['Neuron_non_neuron']=="Neuron"],:]
+    Joint_Cabernet_RNA_count.index=[re.sub(r'.*@@', 'allc', s) for s in Joint_Cabernet_RNA_count.index]
     #Extract paired QC
-    pairedQC=pd.read_csv('../../../input/01-youth/RNA_DNA_match_name_QC_class_label.csv')
+    pairedQC=pd.read_csv('../../../04.data/02.metainfo/03.total/01.Young_Mouse/RNA_DNA_match_name_QC_class_label.csv')
     pairedQC.index='allc_' + pairedQC['RNA'].astype(str) 
-    common=pairedQC[pairedQC['total_QC'] == 1].index.intersection(our_RNA_count.index)
-    RNA=our_RNA_count.loc[common,:]
+    common=pairedQC[pairedQC['total_QC'] == 1].index.intersection(Joint_Cabernet_RNA_count.index)
+    RNA=Joint_Cabernet_RNA_count.loc[common,:]
     RNA.index=pairedQC['Unique_ID_match'][common]
     #Filter gene
     col_sums = RNA.sum()  
@@ -78,7 +76,7 @@ def allcell_correlation(datatype,var_dim,mc_type):
     # Adds the corrected p-value to the result DataFrame
     correlation_results_all['Adjusted P-value'] = corrected_p_values
     # Save the results to a CSV file
-    correlation_results_all.to_csv(f'../../output/01-youth/01-correlation_caluculation/all_cell_correlation/all_cells_{datatype}_{mc_type}_{var_dim}_gene_correlation_results.csv')
+    correlation_results_all.to_csv(f'../../output/01.Young_Mouse/01-correlation_caluculation/all_cell_correlation/all_cells_{datatype}_{mc_type}_{var_dim}_gene_correlation_results.csv')
 
 
 

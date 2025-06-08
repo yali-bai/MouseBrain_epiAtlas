@@ -1,4 +1,3 @@
-#########    All "our" in the following code refers to Joint Cabernet.
 # RNA expression and DNA methylation dotplot plots of gene AC132685.1 in different subclasses were mapped.
 library(data.table)
 library(dplyr)
@@ -17,7 +16,7 @@ datatype<-c("5hmC","true_5mC","5mC")
 mc_type<-c("CG")
 var_dim<-c("genebody")
 palette <- rev(brewer.pal(9,"Greys")[3:9]) #Choose the seven darkest colors
-subclass<-read.table("../../../input/01-youth/subclass_order_for_integration_with_zeng.txt",sep='\n')
+subclass<-read.table("../../../04.data/04.config_files/subclass_order_for_integration_with_zeng.txt",sep='\n')
 subclass<-subclass[,1]
 
 
@@ -25,7 +24,7 @@ plots<-list()
 g=1
 for(mc in mc_type){
     for(varim in var_dim){
-        data<-read.csv("../../../output/01-youth/02-correlation_calculation/genebody_CG_ENSMUSG00000068151.7.csv")
+        data<-read.csv("../../../output/01.Young_Mouse/02-correlation_calculation/genebody_CG_ENSMUSG00000068151.7.csv")
         for(dt in datatype){
             if(dt=="true_5mC"){
                 xlab="TSS to TES 5mCG"
@@ -73,6 +72,6 @@ for(mc in mc_type){
 }
 
 
-pdf("../../../output/01-youth/02-correlation_calculation/plot/AC132685.1_subclass_plots.pdf",width=63,height=8)
+pdf("../../../output/01.Young_Mouse/02-correlation_calculation/plot/AC132685.1_subclass_plots.pdf",width=63,height=8)
 plot_grid(plotlist=plots,ncol=25)
 dev.off()
