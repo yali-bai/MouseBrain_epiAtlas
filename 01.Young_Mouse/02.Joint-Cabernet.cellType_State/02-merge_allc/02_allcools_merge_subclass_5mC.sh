@@ -20,7 +20,7 @@ set -x
 allcools merge-allc  \
 	--allc_paths $indir/${ff}.txt \
 	--output_path ${outdir}/subclass/5mC/${ff}.Merge.allc.tsv.gz \
-	--chrom_size_path ../../../input/reference_genome/mm10.chrom.sizes.nochrM.txt \
+	--chrom_size_path ../../../04.data/01.ref/mm10.chrom.sizes.nochrM.txt \
 	--cpu 105 \
 	--bin_length 10000000 
 
@@ -52,7 +52,7 @@ set -x
 allcools merge-allc  \
         --allc_paths $indir/${ff}.txt \
         --output_path ${outdir}/subclass/5mC/${ff}.Merge.allc.tsv.gz \
-        --chrom_size_path ../../../input/reference_genome/mm10.chrom.sizes.nochrM.txt \
+        --chrom_size_path ../../../04.data/01.ref/mm10.chrom.sizes.nochrM.txt \
         --cpu 35 \
         --bin_length 10000000 
 set +x

@@ -16,7 +16,7 @@ else
     order="allcools merge-allc  \
         --allc_paths ${indir}/${ff}.txt \
         --output_path ${outdir}/${level}/${modification}/${ff}.Merge.allc.tsv.gz \
-        --chrom_size_path ../../../input/reference_genome/mm10.chrom.sizes.nochrM.txt \
+        --chrom_size_path ../../../04.data/01.ref/mm10.chrom.sizes.nochrM.txt \
         --cpu 40 \
         --bin_length 10000000"
 fi
@@ -37,7 +37,7 @@ set -x
 ##allcools merge-allc  \
 ##	--allc_paths $indir/${ff}.txt \
 ##	--output_path ${outdir}/${level}/${modification}/${ff}.Merge.allc.tsv.gz \
-##	--chrom_size_path ../../input/mm10.chrom.sizes.nochrM.txt \
+##	--chrom_size_path ../../../04.data/01.ref/mm10.chrom.sizes.nochrM.txt \
 ##	--cpu 40 \
 ##	--bin_length 10000000 
 
