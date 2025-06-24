@@ -1,2 +1,0 @@
-"01-allc_paths_for_class_and_threeclass.ipynb" and "01-get_allc_txt_for_subclass.ipynb" are for getting the allc table (a file contains 1 ALLC path in each row).
-"02-allcools_merge_subclass_5hmC.sh", "02-allcools_merge_subclass_5mC.sh", and "02-allcools_merge_class_threeclass.sh" are for merging the allc files at different clustering levels.
