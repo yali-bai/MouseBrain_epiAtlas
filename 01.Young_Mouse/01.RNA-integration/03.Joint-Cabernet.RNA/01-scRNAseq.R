@@ -58,7 +58,7 @@ runAnalysis <- function(meta){
   #rownames(mat) <- mouse_geneID$gene_id[match(rownames(mat),mouse_geneID$gene_name)]
   RNA_stat <- read.delim(sprintf("%s/RNA_stat_filter.txt",indir))  
   mat <- mat[,colnames(mat) %in% RNA_stat$SampleID]
-  mm10_geneID <- read.delim("../../../04.data/01.ref/mm10_vM18.genes.bed",header=T)  
+  mm10_geneID <- read.delim("%s/mm10_vM18.genes.bed",header=T)  
   feature.names <- mm10_geneID
   refGenes <- feature.names$gene_name
   names(refGenes) <- feature.names$gene_id
