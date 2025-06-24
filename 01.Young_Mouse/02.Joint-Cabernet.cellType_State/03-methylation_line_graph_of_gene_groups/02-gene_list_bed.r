@@ -14,7 +14,7 @@ Joint_Cabernet_zeng_union<-readRDS(paste0(indir,"/seuratObj.rds"))
 zeng_RNA<-subset(Joint_Cabernet_zeng_union,subset=group=="zeng")
 zeng_RNA_count<-zeng_RNA@assays$RNA$data
 zeng_RNA_count<-zeng_RNA_count[rownames(zeng_unique@assays$RNA),]
-count_value<- as.vector(zeng_RNA_count)  #变成向量
+count_value<- as.vector(zeng_RNA_count)  
 #Take a non-zero value and find the median
 count_value_no_0<-count_value[count_value!=0]
 quantiles <- quantile(count_value_no_0, probs = 0.5)
@@ -22,7 +22,7 @@ quantiles <- quantile(count_value_no_0, probs = 0.5)
 
 ########## Grouping genes and extracting genes from bed files
 zeng_RNA_subclass<-read.csv("../../../04.data/05.intermediate_files/01.RNA/01.Young_Mouse/zeng_subclass_mean_dat_final.csv",row.names = 1)
-bed_data <- read.table("../../../04.data/01.ref/gencode.vM18.annotation.gene.bed", header = FALSE, sep = "\t", stringsAsFactors = FALSE, col.names = c("chromosome", "start", "end","strand","gene_id","gene_type","gene_name"))
+bed_data <- read.table("../../../04.data/01.ref/mm10.genes_duplicated.bed", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 
 
 for(i in 1:ncol(zeng_RNA_subclass)){

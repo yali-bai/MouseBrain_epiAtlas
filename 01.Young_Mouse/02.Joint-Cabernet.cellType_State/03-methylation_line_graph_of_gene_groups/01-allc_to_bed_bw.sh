@@ -8,7 +8,7 @@ for dt in "${datatype[@]}";do
 # outdir=""
 
 bedGraphToBigWig= ${indir}/software/UCSC_tools/bedGraphToBigWig
-chrom_size= ../../../input/reference_genome/mm10.chrom.sizes.txt
+chrom_size= ../../../04.data/01.ref/mm10.chrom.sizes.txt
 
 ls $indir|grep "\.gz$"| sed 's/.allc.tsv.gz$//g' | while read ff 
 do 
