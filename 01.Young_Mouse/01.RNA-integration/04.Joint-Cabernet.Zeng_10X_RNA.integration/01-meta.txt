@@ -1,3 +1,2 @@
-#########    All of the following "our" refers to Joint Cabernet.
-our	our
+Joint_Cabernet	Joint_Cabernet
 zeng	zeng
