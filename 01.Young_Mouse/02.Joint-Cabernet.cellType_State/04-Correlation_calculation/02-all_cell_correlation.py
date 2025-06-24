@@ -25,7 +25,7 @@ def allcell_correlation(datatype,var_dim,mc_type):
     Joint_Cabernet_RNA_count=Joint_Cabernet_RNA_count.loc[Joint_Cabernet_RNA.obs.index[Joint_Cabernet_RNA.obs['Neuron_non_neuron']=="Neuron"],:]
     Joint_Cabernet_RNA_count.index=[re.sub(r'.*@@', 'allc', s) for s in Joint_Cabernet_RNA_count.index]
     #Extract paired QC
-    pairedQC=pd.read_csv('../../../04.data/02.metainfo/03.total/01.Young_Mouse/RNA_DNA_match_name_QC_class_label.csv')
+    pairedQC=pd.read_csv('../../../04.data/02.metainfo/01.Young_Mouse/RNA_DNA_match_name_QC_class_label_young.csv')
     pairedQC.index='allc_' + pairedQC['RNA'].astype(str) 
     common=pairedQC[pairedQC['total_QC'] == 1].index.intersection(Joint_Cabernet_RNA_count.index)
     RNA=Joint_Cabernet_RNA_count.loc[common,:]

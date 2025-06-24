@@ -14,7 +14,7 @@ def compute_5mC(var_dim,mc_type):
     #Check whether row names and column names are consistent
     print(hmC.obs_names.equals(mC.obs_names))
     print(hmC.var_names.equals(mC.var_names))
-    info=pd.read_csv("../../../04.data/02.metainfo/03.total/01.Young_Mouse/RNA_DNA_match_name_QC_class_label.csv")
+    info=pd.read_csv("../../../04.data/02.metainfo/01.Young_Mouse/RNA_DNA_match_name_QC_class_label_young.csv")
     info.index='allc_'+info['hmC']
     hmC.obs_names=info['Unique_ID_match'][hmC.obs_names]
     info.index='allc_'+info['mC']

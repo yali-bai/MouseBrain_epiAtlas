@@ -1,4 +1,3 @@
-#########    All "our" in the following code refers to Joint Cabernet.
 ########RNA expression and DNA methylation dotplot plot data preparation in each subclass of gene AC132685.1.
 import scanpy as sc
 import pandas as pd
@@ -12,21 +11,21 @@ import re
 #gene_list=['AC132685.1']
 gene='ENSMUSG00000068151.7'
 #RNA
-our_RNA=sc.read_h5ad(f'{indir}/our_RNA_annotated_latest.h5ad')
-if issparse(our_RNA.X):  
-    X_dense = our_RNA.X.toarray()  
+Joint_Cabernet_RNA=sc.read_h5ad(f'{indir}/Joint_Cabernet_RNA_annotated_latest.h5ad')
+if issparse(Joint_Cabernet_RNA.X):  
+    X_dense = Joint_Cabernet_RNA.X.toarray()  
 else:  
-    X_dense = our_RNA.X
-our_RNA_count= pd.DataFrame(X_dense, columns=our_RNA.var_names) 
-our_RNA_count.index=our_RNA.obs.index
+    X_dense = Joint_Cabernet_RNA.X
+Joint_Cabernet_RNA_count= pd.DataFrame(X_dense, columns=Joint_Cabernet_RNA.var_names) 
+Joint_Cabernet_RNA_count.index=Joint_Cabernet_RNA.obs.index
 # Extract neuron cells
-our_RNA_count=our_RNA_count.loc[our_RNA.obs.index[our_RNA.obs['Neuron_non_neuron']=="Neuron"],:]
-our_RNA_count.index=[re.sub(r'.*@@', 'allc', s) for s in our_RNA_count.index]
+Joint_Cabernet_RNA_count=Joint_Cabernet_RNA_count.loc[Joint_Cabernet_RNA.obs.index[Joint_Cabernet_RNA.obs['Neuron_non_neuron']=="Neuron"],:]
+Joint_Cabernet_RNA_count.index=[re.sub(r'.*@@', 'allc', s) for s in Joint_Cabernet_RNA_count.index]
 # paired QC was extracted
-pairedQC=pd.read_csv('../../../input/01-youth/RNA_DNA_match_name_QC_class_label.csv')
+pairedQC=pd.read_csv('../../../04.data/02.metainfo/01.Young_Mouse/RNA_DNA_match_name_QC_class_label_young.csv')
 pairedQC.index='allc_' + pairedQC['RNA'].astype(str) 
-common=pairedQC[pairedQC['total_QC'] == 1].index.intersection(our_RNA_count.index)
-RNA=our_RNA_count.loc[common,:]
+common=pairedQC[pairedQC['total_QC'] == 1].index.intersection(Joint_Cabernet_RNA_count.index)
+RNA=Joint_Cabernet_RNA_count.loc[common,:]
 RNA.index=pairedQC['Unique_ID_match'][common]
 col_sums = RNA.sum()  
 #Filter out columns whose sum is not 0
@@ -66,7 +65,7 @@ for datatype in datatypes:
         })
     df_cleaned = df.dropna(subset=['DNA'])
     result_df=result_df.append(df_cleaned)
-    result_df.to_csv('../../../output/01-youth/02-correlation_calculation/genebody_CG_ENSMUSG00000068151.7.csv')
+    result_df.to_csv('../../../output/01.Young_Mouse/02-correlation_calculation/genebody_CG_ENSMUSG00000068151.7.csv')
     print('genebody_CG_ENSMUSG00000068151.7:finished')
 
 

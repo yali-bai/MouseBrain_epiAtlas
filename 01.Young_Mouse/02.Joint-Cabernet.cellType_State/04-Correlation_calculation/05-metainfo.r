@@ -27,17 +27,16 @@ data$RNA.cv<-apply(Joint_Cabernet_RNA_count,1,function(x){
 write.csv(data,"../../../output/01.Young_Mouse/02-correlation_calculation/RNA_metainfo_data.csv",row.names = F)
 
 #Generate metainfo of all genes on genebody, including gene id, gene name, chromosome location, gene length, CpG number, etc
-gene_bed<-read.table("../../../04.data/01.ref/Gene.output.bed.gz", header = FALSE, sep = "\t", stringsAsFactors = FALSE, col.names = c("chromosome", "start", "end","Cpg_number"))
-gene_location<-read.csv("../../../04.data/01.ref/gene_location.csv")
-gene_location$start<-as.numeric(gene_location$start)-1
-colnames(gene_location)[1:2]<-c("gene_id","chromosome")
-gene_metainfo<-merge(gene_location,gene_bed)
+gene_bed_cpg<-read.table("../../../04.data/01.ref/Gene.output.bed.gz", header = FALSE, sep = "\t", stringsAsFactors = FALSE, col.names = c("chr", "start", "end","Cpg_number"))
+gene_bed<-read.csv("../../../04.data/01.ref/mm10.genes_duplicated.bed")
+gene_bed$start<-as.numeric(gene_bed$start)-1
+gene_metainfo<-merge(gene_bed,gene_bed_cpg)
 gene_metainfo$Cpg_number<-gsub("CpG:_","",gene_metainfo$Cpg_number)
 gene_metainfo$Gene_length<-gene_metainfo$end-gene_metainfo$start+1
 gene_meta_last<-read.csv("../../../04.data/gene_genelength_cpgnum.csv")
-gene_metainfo<-merge(gene_metainfo,gene_meta_last[,1:2])%>%
-mutate(var_dim=rep("genebody",nrow(.)))
-gene_metainfo<-gene_metainfo[!duplicated(gene_metainfo),]
+gene_metainfo<-gene_metainfo%>%
+  mutate(var_dim=rep("genebody",nrow(.)))%>%
+  .[!duplicated(.),]
 write.csv(gene_metainfo,"../../../output/01.Young_Mouse/02-correlation_calculation/gene_metainfo.csv",row.names=F)
 
 

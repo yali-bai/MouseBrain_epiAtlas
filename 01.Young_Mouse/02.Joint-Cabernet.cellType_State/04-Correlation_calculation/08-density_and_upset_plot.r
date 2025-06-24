@@ -4,7 +4,7 @@ library(dplyr)
 library(data.table)
 library(cowplot)
 
-data<-fread("../../../output/01-youth/02-correlation_calculation/shuffled_RNA_DNA_correlation_result_all.csv")%>%as.data.frame()
+data<-fread("../../../output/01.Young_Mouse/02-correlation_calculation/shuffled_RNA_DNA_correlation_result_all.csv")%>%as.data.frame()
 data_filter<-data[data$new.P.adjust<0.05,]
 
 datatype<-c("5mC","true_5mC","5hmC")
@@ -72,7 +72,7 @@ for(mc in mc_type){
     }
 }
 
-pdf("../../../output/01-youth/02-correlation_calculation/plot/Correlation_density_plot_limit_0.1.pdf",width=9,height=12)
+pdf("../../../output/01.Young_Mouse/02-correlation_calculation/plot/Correlation_density_plot_limit_0.1.pdf",width=9,height=12)
 plot_grid(plotlist = plot, ncol = 3)
 dev.off()
 
@@ -86,7 +86,7 @@ library(data.table)
 library(dplyr)
 
 
-data<-fread("../../../output/01-youth/02-correlation_calculation/shuffled_RNA_DNA_correlation_result_all.csv")%>%as.data.frame()
+data<-fread("../../../output/01.Young_Mouse/02-correlation_calculation/shuffled_RNA_DNA_correlation_result_all.csv")%>%as.data.frame()
 all<-data[data$new.P.adjust<0.05,]
 all_data<-all[,1:16]
 all_data$corr_direction<-ifelse(all_data$Correlation>0,"Positive correlation","Negative correlation")
@@ -154,10 +154,10 @@ for (mc in mc_types){
                     shade.color = "#12507B" 
               )
               
-              pdf(paste0("../../../output/01-youth/02-correlation_calculation/plot/Upset_",vardim,"_",mc,"_all_gene.pdf"),width =8, height =5)
+              pdf(paste0("../../../output/01.Young_Mouse/02-correlation_calculation/plot/Upset_",vardim,"_",mc,"_all_gene.pdf"),width =8, height =5)
               print(p1)
               dev.off()
-              png(paste0("../../../outpu/01-youtht/02-correlation_calculation/plot/Upset_",vardim,"_",mc,"_all_gene.png"),width =8, height =5,units="in", res = 300)
+              png(paste0("../../../outpu/01.Young_Mouse/02-correlation_calculation/plot/Upset_",vardim,"_",mc,"_all_gene.png"),width =8, height =5,units="in", res = 300)
               print(p1)
               dev.off()
             color_vector2 <- rev(color[length!=0])
@@ -180,10 +180,10 @@ for (mc in mc_types){
                     text.scale = c(1.5, 1.5, 1.5, 1.5, 1.5, 1.6), 
                     shade.color = "#12507B"
               )
-              pdf(paste0("../../../output/01-youth/02-correlation_calculation/plot/Upset_",vardim,"_",mc,"_filterd_gene.pdf"),width =8, height =5)
+              pdf(paste0("../../../output/01.Young_Mouse/02-correlation_calculation/plot/Upset_",vardim,"_",mc,"_filterd_gene.pdf"),width =8, height =5)
               print(p2)
               dev.off()
-              png(paste0("../../../output/01-youth/02-correlation_calculation/plot/Upset_",vardim,"_",mc,"_filterd_gene.png"),width =8, height =5,units="in", res = 300)
+              png(paste0("../../../output/01.Young_Mouse/02-correlation_calculation/plot/Upset_",vardim,"_",mc,"_filterd_gene.png"),width =8, height =5,units="in", res = 300)
               print(p2)
               dev.off()
           }}
