@@ -35,7 +35,7 @@ sns.set(context=None,
     rc=None,)
 
 
-with open("../../../../input/01-youth/subclass_order_for_integration_with_zeng.txt", "rt") as f:
+with open("../../../../04.data/04.config_files/subclass_order_for_integration_with_zeng.txt", "rt") as f:
     subclass_list=f.read().split("\n")[:-1]
 subclass_list=[i for i in subclass_list if "NN" not in i]
 
@@ -69,9 +69,11 @@ def get_gene_id(region_, trees, overlap_threshold=80):
 
 
 if region == "promoter":
-    genes_df = pd.read_csv('../../../../input/reference_genome/PromoterUp2k.mm10.bed', sep='\t', header=None, names=['chromosome', 'start', 'end', 'gene_id', 'gene_name', 'strand'])
+    genes_df = pd.read_csv('../../../../04.data/01.ref/PromoterUp2k.mm10.bed', sep='\t', header=None, names=['chromosome', 'start', 'end', 'gene_id', 'gene_name', 'strand'])
 else:
-    genes_df = pd.read_csv('../../../../input/reference_genome/Genebody.mm10.bed', sep='\t', header=None, names=['chromosome', 'start', 'end', 'gene_id', 'gene_name', 'strand'])
+    genes_df = pd.read_csv('../../../04.data/01.ref/mm10.genes_duplicated.bed', sep='\t', header=0)
+    genes_df.columns = ['chromosome', 'start', 'end', 'gene_id', 'gene_name', 'gene_type', 'strand']
+    genes_df = genes_df[['chromosome', 'start', 'end', 'gene_id', 'gene_name', 'strand']]
 
 
 df_frac_segment_subclass=dict()
