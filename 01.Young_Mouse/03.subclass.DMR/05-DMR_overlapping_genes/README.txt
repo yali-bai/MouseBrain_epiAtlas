@@ -1,2 +1,0 @@
-The files in "plot_vertical" are for overlapping DMRs and DHMRs with gene bodies and promoters, and generating the relevant lists and heatmaps in a vertical way.
-Likewise, The files in "plot_horizontal" are for overlapping DMRs and DHMRs with gene bodies and promoters and generating the relevant heatmaps in a horizontal way.
