@@ -3,7 +3,7 @@
 # indir=""
 # outdir=""
 bedGraphToBigWig=${indir}/UCSC_tools/bedGraphToBigWig
-chrom_size=../../../../input/reference_genome/mm10.chrom.sizes.txt
+chrom_size=../../../../04.data/01.ref/mm10.chrom.sizes.txt
 
 cat ${indir}/hyper_DHMR.bedgraph | sort -k1,1 -k2,2n  > ${indir}/hyper_DHMR_sorted.bedgraph
 
