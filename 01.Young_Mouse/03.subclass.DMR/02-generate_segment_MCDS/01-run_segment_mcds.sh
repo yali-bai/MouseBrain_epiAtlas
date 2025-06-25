@@ -23,11 +23,11 @@ set -x
 allcools generate-dataset  \
 	--allc_table ${allc_path} \
 	--output_path ${outdir}/${batch}.mcds \
-	--chrom_size_path ../../../input/reference_genome/mm10.chrom.sizes.nochrM.txt \
+	--chrom_size_path ../../../04.data/01.ref/mm10.chrom.sizes.nochrM.txt \
 	--obs_dim cell  \
 	--cpu 70 \
 	--chunk_size 50 \
-	--region segment ../../../output/01-youth/03-wgbstools_generate_segment/TSO_${modification}_segment_3CpG.bed  \
+	--region segment ../../../output/01.Young_Mouse/03-wgbstools_generate_segment/TSO_${modification}_segment_3CpG.bed  \
 	--quantifiers segment count CGN
 
 set +x
