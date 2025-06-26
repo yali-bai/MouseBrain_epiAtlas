@@ -62,7 +62,7 @@ from intervaltree import IntervalTree
 
 df = pd.read_csv(f'{outdir}/00-dhmr_state_collapsed_matrix_neuron.csv', index_col=0)
 
-genes_df = pd.read_csv('../../../input/reference_genome/Genebody.mm10.bed', sep='\t', header=None, names=['chromosome', 'start', 'end', 'gene_id', 'gene_name', 'strand'])
+genes_df = pd.read_csv('../../../04.data/Genebody.mm10.bed', sep='\t', header=None, names=['chromosome', 'start', 'end', 'gene_id', 'gene_name', 'strand'])
 
 # Create a dictionary to store the intervals of each chromosome.
 trees = {}
