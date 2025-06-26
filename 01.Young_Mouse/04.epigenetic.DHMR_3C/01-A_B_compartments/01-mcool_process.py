@@ -1,5 +1,4 @@
 
-#########    All "our" in the following code refers to Joint Cabernet.import cooler
 import subprocess
 import sys
 import pandas as pd
@@ -8,7 +7,7 @@ import pandas as pd
 # indir=""
 # outdir=""
 
-csv_path = "../../../input/01-youth/subclass_our_liu.csv"
+csv_path = "../../../04.data/02.metainfo/01.RNA/01.Young_Mouse/subclass_corresponding_name.csv"
 df = pd.read_csv(csv_path, sep=',')
 
 for subclass_liu in df['subclass_liu']:
