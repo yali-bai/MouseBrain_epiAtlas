@@ -1,12 +1,11 @@
-#########    All "our" in the following code refers to Joint Cabernet.
 import subprocess
 import pandas as pd
 
-with open("../../../input/01-youth/subclass_order_for_integration_with_zeng.txt", "rt") as f:
+with open("../../../04.data/04.config_files/subclass_order_for_integration_with_zeng.txt", "rt") as f:
     subclass_list=f.read().split("\n")[:-1]
 subclass_list=[i for i in subclass_list if "NN" not in i]
 
-csv_path = "../../../input/01-youth/subclass_our_liu.csv"
+csv_path = "../../../04.data/02.metainfo/01.RNA/01.Young_Mouse/subclass_corresponding_name.csv"
 df = pd.read_csv(csv_path, sep=',')
 df = df.iloc[:len(subclass_list),:]
 
