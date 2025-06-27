@@ -1,0 +1,30 @@
+subclass_our,subclass_liu
+L2/3 IT CTX Glut,L2_3_IT_CTX_Glut
+L4/5 IT CTX Glut,L4_5_IT_CTX_Glut
+L5 IT CTX Glut,L5_IT_CTX_Glut
+L2/3 IT RSP Glut,L2_3_IT_RSP_Glut
+L4 RSP-ACA Glut,L4_RSP-ACA_Glut
+L5 ET CTX Glut,L5_ET_CTX_Glut
+SUB-ProS Glut,SUB-ProS_Glut
+CA1-ProS Glut,CA1-ProS_Glut
+CA3 Glut,CA3_Glut
+CLA-EPd-CTX Car3 Glut,CLA-EPd-CTX_Car3_Glut
+L5 NP CTX Glut,L5_NP_CTX_Glut
+L6 CT CTX Glut,L6_CT_CTX_Glut
+DG Glut,DG_Glut
+OB Eomes Ms4a15 Glut,OB_Eomes_Ms4a15_Glut
+OB-in Frmd7 Gaba,OB-in_Frmd7_Gaba
+OB-out Frmd7 Gaba,OB-out_Frmd7_Gaba
+OB Dopa-Gaba,OB_Dopa-Gaba
+OB-STR-CTX Inh IMN,OB-STR-CTX_Inh_IMN
+Sncg Gaba,Sncg_Gaba
+Lamp5 Gaba,Lamp5_Gaba
+Pvalb Gaba,Pvalb_Gaba
+Sst Gaba,Sst_Gaba
+STR D1 Gaba,STR_D1_Gaba
+STR D2 Gaba,STR_D2_Gaba
+ACB-BST-FS D1 Gaba,ACB-BST-FS_D1_Gaba
+Astro-TE NN,Astro-TE_NN
+Oligo NN,Oligo_NN
+OPC NN,OPC_NN
+Microglia NN,Microglia_NN
