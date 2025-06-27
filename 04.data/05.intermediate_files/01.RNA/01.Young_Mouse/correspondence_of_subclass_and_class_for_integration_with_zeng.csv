@@ -1,0 +1,31 @@
+subclass,class
+L2/3 IT CTX Glut,IT-ET Glut
+L4/5 IT CTX Glut,IT-ET Glut
+L5 IT CTX Glut,IT-ET Glut
+L2/3 IT RSP Glut,IT-ET Glut
+L4 RSP-ACA Glut,IT-ET Glut
+L5 ET CTX Glut,IT-ET Glut
+SUB-ProS Glut,IT-ET Glut
+CA1-ProS Glut,IT-ET Glut
+CA3 Glut,IT-ET Glut
+CLA-EPd-CTX Car3 Glut,IT-ET Glut
+L5 NP CTX Glut,NP-CT-L6b Glut
+L6 CT CTX Glut,NP-CT-L6b Glut
+DG Glut,DG-IMN Glut
+OB Eomes Ms4a15 Glut,OB-CR Glut
+OB-in Frmd7 Gaba,OB-IMN GABA
+OB-out Frmd7 Gaba,OB-IMN GABA
+OB Dopa-Gaba,OB-IMN GABA
+OB-STR-CTX Inh IMN,OB-IMN GABA
+Sncg Gaba,CTX-CGE GABA
+Lamp5 Gaba,CTX-CGE GABA
+Pvalb Gaba,CTX-MGE GABA
+Sst Gaba,CTX-MGE GABA
+STR D1 Gaba,CNU-LGE GABA
+STR D2 Gaba,CNU-LGE GABA
+ACB-BST-FS D1 Gaba,CNU-HYa GABA
+Astro-TE NN,Astro-Epen
+Oligo NN,OPC-Oligo
+OPC NN,OPC-Oligo
+OEC NN,OEC
+Microglia NN,Immune
