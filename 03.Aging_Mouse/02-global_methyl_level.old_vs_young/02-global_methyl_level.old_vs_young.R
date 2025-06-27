@@ -20,37 +20,32 @@ library(cowplot)
 # outdir=""
 
 ##### 02.change working path #####
-# setwd("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/20241011_integration_by_subclass_marker")
+setwd('./')
 ##### 03. data prepare #####
 ## load integrated data and metainfo ##
-load(paste0(indir,"/seurat_obj.our_integrated.RData"))
+load(paste0(indir,"/seurat_obj.Joint_Cabernet_integrated.RData"))
 metainfo = our.seuratobj@meta.data
 
 ## get unique id for pairing ##
 metainfo$sample = merged.seuratobj.sct@meta.data[rownames(metainfo),"sample"]
 metainfo$uniq_id = paste(unlist(lapply(metainfo$sample, function(x) strsplit(x,"_")[[1]][1])),unlist(lapply(metainfo$sample, function(x) strsplit(x,"_")[[1]][2])),unlist(lapply(metainfo$sample, function(x) strsplit(x,"_")[[1]][4])),unlist(lapply(metainfo$sample, function(x) strsplit(x,"_")[[1]][6])),unlist(lapply(metainfo$sample, function(x) strsplit(x,"_")[[1]][8])),sep="_")
 
-#young_match.df = read.csv("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/sample_info/01_Sampleinfo/RNA_DNA_match_name_QC_44608.csv",header=T)
-young_match.df = read.csv("../../input/01-youth/RNA_DNA_match_name_QC_class_label.csv",header=T)
-young_match.subset = subset(young_match.df,RNA_filter4_QC==1)
+young_match.df = read.csv("../../04.data/02.metainfo/01.Young_Mouse/RNA_DNA_match_name_QC_class_label_young.csv",header=T)
+young_match.subset = subset(young_match.df,RNA_QC==1)
 metainfo$uniq_id[match(young_match.subset$RNA,metainfo$sample)] = young_match.subset$Unique_ID_match
 
 ## QC information ##
-#young_QC.df = fread("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/sample_info/02_QC_stat/TSO-joint.DNA_QC_stat.younger_than_P70.v20240902.csv",header=T,,data.table=F)
-#old_QC.df = fread("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/old_mouse_sample_info/02_QC_stat/TSO-joint.DNA_QC_stat.old_mouse.v20241009.csv",header=T,,data.table=F)
-young_QC.df = fread("../../input/01-youth/TSO-joint.DNA_QC_stat.younger_than_P70.csv",header=T,,data.table=F)
-old_QC.df = fread("../../input/03-aging/TSO-joint.DNA_QC_stat.old_mouse.csv",header=T,,data.table=F)
+hmC_QC.df = fread("../../04.data/02.metainfo/03.Aging_Mouse/TSO-joint.hmC_QC_stat.aged.csv",header=T,,data.table=F)
+mC_QC.df = fread("../../04.data/02.metainfo/03.Aging_Mouse/TSO-joint.mC_QC_stat.aged.csv",header=T,,data.table=F)
 
 ## DNA global level ##
 ## CH ##
 ## hmCH ##
-#global_methy = fread("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/5hmCH.all_cells.global_methy.txt",header=F,data.table=F)
-global_methy = fread("../../input/03-aging/5hmCH.all_cells.global_methy.txt",header=F,data.table=F)
+global_methy = fread("../../04.data/05.intermediate_files/02.DNA/02.Aging_Mouse/5hmCH.all_cells.global_methy.txt",header=F,data.table=F)
 global_methy$uniq_id = paste(unlist(lapply(global_methy$V1, function(x) strsplit(x,"_")[[1]][1])),unlist(lapply(global_methy$V1, function(x) strsplit(x,"_")[[1]][2])),unlist(lapply(global_methy$V1, function(x) strsplit(x,"_")[[1]][4])),unlist(lapply(global_methy$V1, function(x) strsplit(x,"_")[[1]][6])),unlist(lapply(global_methy$V1, function(x) strsplit(x,"_")[[1]][8])),sep="_")
 global_methy$uniq_id[match(intersect(young_match.df$hmC,global_methy$V1),global_methy$V1)] = young_match.df$Unique_ID_match[match(intersect(young_match.df$hmC,global_methy$V1),young_match.df$hmC)]
 global_methy$QC = NA
-global_methy$QC[match(intersect(global_methy$V1,young_QC.df$SampleID),global_methy$V1)] = young_QC.df[match(intersect(global_methy$V1,young_QC.df$SampleID),young_QC.df$SampleID),"QC"]
-global_methy$QC[match(intersect(global_methy$V1,old_QC.df$SampleID),global_methy$V1)] = old_QC.df[match(intersect(global_methy$V1,old_QC.df$SampleID),old_QC.df$SampleID),"QC"]
+global_methy$QC[match(intersect(global_methy$V1,hmC_QC.df$SampleID),global_methy$V1)] = hmC_QC.df[match(intersect(global_methy$V1,hmC_QC.df$SampleID),hmC_QC.df$SampleID),"QC"]
 global_methy$V2[which(global_methy$QC == 0)] = NA
 rownames(global_methy) = global_methy$uniq_id
 global_methy_subset = global_methy[metainfo$uniq_id,]
@@ -58,13 +53,11 @@ metainfo$hmCH = global_methy_subset$V2
 metainfo$age = factor(metainfo$age,levels=c("young","old"))
 
 ## mCH ##
-#global_methy = fread("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/5mCH_5hmCH.all_cells.global_methy.txt",header=F,data.table=F)
-global_methy = fread("../../input/03-aging/5mCH_5hmCH.all_cells.global_methy.txt",header=F,data.table=F)
+global_methy = fread("../../04.data/05.intermediate_files/02.DNA/02.Aging_Mouse/5mCH_5hmCH.all_cells.global_methy.txt",header=F,data.table=F)
 global_methy$uniq_id = paste(unlist(lapply(global_methy$V1, function(x) strsplit(x,"_")[[1]][1])),unlist(lapply(global_methy$V1, function(x) strsplit(x,"_")[[1]][2])),unlist(lapply(global_methy$V1, function(x) strsplit(x,"_")[[1]][4])),unlist(lapply(global_methy$V1, function(x) strsplit(x,"_")[[1]][6])),unlist(lapply(global_methy$V1, function(x) strsplit(x,"_")[[1]][8])),sep="_")
 global_methy$uniq_id[match(intersect(young_match.df$mC,global_methy$V1),global_methy$V1)] = young_match.df$Unique_ID_match[match(intersect(young_match.df$mC,global_methy$V1),young_match.df$mC)]
 global_methy$QC = NA
-global_methy$QC[match(intersect(global_methy$V1,young_QC.df$SampleID),global_methy$V1)] = young_QC.df[match(intersect(global_methy$V1,young_QC.df$SampleID),young_QC.df$SampleID),"QC"]
-global_methy$QC[match(intersect(global_methy$V1,old_QC.df$SampleID),global_methy$V1)] = old_QC.df[match(intersect(global_methy$V1,old_QC.df$SampleID),old_QC.df$SampleID),"QC"]
+global_methy$QC[match(intersect(global_methy$V1,mC_QC.df$SampleID),global_methy$V1)] = mC_QC.df[match(intersect(global_methy$V1,mC_QC.df$SampleID),mC_QC.df$SampleID),"QC"]
 global_methy$V2[which(global_methy$QC == 0)] = NA
 rownames(global_methy) = global_methy$uniq_id
 global_methy_subset = global_methy[metainfo$uniq_id,]
@@ -81,19 +74,17 @@ metainfo$mCH = metainfo$mCH_hmCH - metainfo$hmCH
 ## CG in stat file ##
 ## hmCG ##
 metainfo$stat_hmCG = NA
-#young.DNA.stat.df = read.csv("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/sample_info/02_QC_stat/TSO-joint.DNA_QC_stat.younger_than_P70.v20240902.csv",header=T)
-young.DNA.stat.df = fread("../../input/01-youth/TSO-joint.DNA_QC_stat.younger_than_P70.csv",header=T,,data.table=F)
+young.DNA.stat.df = fread("../../04.data/02.metainfo/01.Young_Mouse/TSO-joint.hmC_QC_stat.young.csv",header=T,,data.table=F)
 young.DNA.stat.hmC = subset(young.DNA.stat.df,Library == "hmC")
 rownames(young.DNA.stat.hmC) = young.DNA.stat.hmC$Unique_ID
-young.DNA.stat.hmC[match(intersect(young.DNA.stat.hmC$SampleID,young_QC.df$SampleID[which(young_QC.df$QC == 0)]),young.DNA.stat.hmC$SampleID),"dna_mCG_R"] = NA
+young.DNA.stat.hmC[match(intersect(young.DNA.stat.hmC$SampleID,hmC_QC.df$SampleID[which(hmC_QC.df$QC == 0)]),young.DNA.stat.hmC$SampleID),"dna_mCG_R"] = NA
 metainfo$stat_hmCG[match(intersect(metainfo$uniq_id,young.DNA.stat.hmC$Unique_ID),metainfo$uniq_id)] = young.DNA.stat.hmC$dna_mCG_R[match(intersect(metainfo$uniq_id,young.DNA.stat.hmC$Unique_ID),young.DNA.stat.hmC$Unique_ID)]
-#old.DNA.stat.df = read.table("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/DNA/old_mouse.DNA.total.stat.txt",header=T,sep="\t")
-old.DNA.stat.df = read.table("../../input/03-aging/old_mouse.DNA.total.stat.txt",header=T,sep="\t")
+old.DNA.stat.df = read.csv("../../04.data/02.metainfo/03.Aging_Mouse/TSO-joint.hmC_QC_stat.aged.csv",header=T)
 old.DNA.stat.df$Unique_ID = paste(unlist(lapply(old.DNA.stat.df$SampleID, function(x) strsplit(x,"_")[[1]][1])),unlist(lapply(old.DNA.stat.df$SampleID, function(x) strsplit(x,"_")[[1]][2])),unlist(lapply(old.DNA.stat.df$SampleID, function(x) strsplit(x,"_")[[1]][4])),unlist(lapply(old.DNA.stat.df$SampleID, function(x) strsplit(x,"_")[[1]][6])),unlist(lapply(old.DNA.stat.df$SampleID, function(x) strsplit(x,"_")[[1]][8])),sep="_")
 old.DNA.stat.df$Library = str_replace(unlist(lapply(old.DNA.stat.df$SampleID, function(x) strsplit(x,"_")[[1]][7])),"joint5","")
 old.DNA.stat.hmC = subset(old.DNA.stat.df,Library == "hmC")
 rownames(old.DNA.stat.hmC) = old.DNA.stat.hmC$Unique_ID
-old.DNA.stat.hmC[match(intersect(old.DNA.stat.hmC$SampleID,old_QC.df$SampleID[which(old_QC.df$QC == 0)]),old.DNA.stat.hmC$SampleID),"dna_mCG_R"] = NA
+old.DNA.stat.hmC[match(intersect(old.DNA.stat.hmC$SampleID,hmC_QC.df$SampleID[which(hmC_QC.df$QC == 0)]),old.DNA.stat.hmC$SampleID),"dna_mCG_R"] = NA
 metainfo$stat_hmCG[match(intersect(metainfo$uniq_id,old.DNA.stat.hmC$Unique_ID),metainfo$uniq_id)] = old.DNA.stat.hmC$dna_mCG_R[match(intersect(metainfo$uniq_id,old.DNA.stat.hmC$Unique_ID),old.DNA.stat.hmC$Unique_ID)]
 
 ## mCG_hmCG ##
@@ -101,10 +92,10 @@ metainfo$stat_mCG_hmCG = NA
 young.DNA.stat.mC = subset(young.DNA.stat.df,Library == "mC")
 rownames(young.DNA.stat.mC) = young.DNA.stat.mC$Unique_ID
 metainfo$stat_mCG_hmCG[match(intersect(metainfo$uniq_id,young.DNA.stat.mC$Unique_ID),metainfo$uniq_id)] = young.DNA.stat.mC$dna_mCG_R[match(intersect(metainfo$uniq_id,young.DNA.stat.mC$Unique_ID),young.DNA.stat.mC$Unique_ID)]
-young.DNA.stat.hmC[match(intersect(young.DNA.stat.hmC$SampleID,young_QC.df$SampleID[which(young_QC.df$QC == 0)]),young.DNA.stat.hmC$SampleID),"dna_mCG_R"] = NA
+young.DNA.stat.hmC[match(intersect(young.DNA.stat.hmC$SampleID,mC_QC.df$SampleID[which(mC_QC.df$QC == 0)]),young.DNA.stat.hmC$SampleID),"dna_mCG_R"] = NA
 old.DNA.stat.mC = subset(old.DNA.stat.df,Library == "mC")
 rownames(old.DNA.stat.mC) = old.DNA.stat.mC$Unique_ID
-old.DNA.stat.hmC[match(intersect(old.DNA.stat.hmC$SampleID,old_QC.df$SampleID[which(old_QC.df$QC == 0)]),old.DNA.stat.hmC$SampleID),"dna_mCG_R"] = NA
+old.DNA.stat.hmC[match(intersect(old.DNA.stat.hmC$SampleID,mC_QC.df$SampleID[which(mC_QC.df$QC == 0)]),old.DNA.stat.hmC$SampleID),"dna_mCG_R"] = NA
 metainfo$stat_mCG_hmCG[match(intersect(metainfo$uniq_id,old.DNA.stat.mC$Unique_ID),metainfo$uniq_id)] = old.DNA.stat.mC$dna_mCG_R[match(intersect(metainfo$uniq_id,old.DNA.stat.mC$Unique_ID),old.DNA.stat.mC$Unique_ID)]
 
 ## true mCG ##
@@ -116,11 +107,10 @@ metainfo$stat_mCG = metainfo$stat_mCG_hmCG - metainfo$stat_hmCG
 
 ## save result ##
 #saveRDS(metainfo,file="metainfo.250115.rds")
-saveRDS(metainfo,file="../../output/03-aging/metainfo.250115.rds")
+saveRDS(metainfo,file="../../output/03.Aging_Mouse/metainfo.250115.rds")
 
 ## subclass order ##
-#subclass_order = readRDS("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/20241011_integration_by_subclass_marker/order.subclass.rds")
-subclass_order = readRDS("../../input/03-aging/order.subclass.rds")
+subclass_order = readRDS("../../04.data/04.config_files/order.subclass.rds")
 metainfo$lt_twice_subclass = factor(metainfo$lt_twice_subclass,levels=subclass_order)
 
 ##### 04. plot #####
@@ -317,7 +307,7 @@ p6<-ggplot(metainfo,aes(x=lt_twice_subclass,y=mCH_hmCH,fill=age))+
             axis.title.x = element_blank(),
             axis.title.y = element_text(face="bold", size=10))
 
-pdf("../../output/03-aging/01-global_DNA_methyl_old_vs_young_violinplot/subclass.DNA_Global_methylation.split_violin_plot.with_significance.scale_width.wilcox_test.250115.pdf",width=8,height=6)
+pdf("../../output/03.Aging_Mouse/01-global_DNA_methyl_old_vs_young_violinplot/subclass.DNA_Global_methylation.split_violin_plot.with_significance.scale_width.wilcox_test.250115.pdf",width=8,height=6)
 plot_grid(p1,p2,p3,p4,p5,p6,ncol=1,rel_heights=c(1,1,1,1,1,2.5))
 dev.off()
 
@@ -465,15 +455,14 @@ p6<-ggplot(metainfo,aes(x=lt_twice_subclass,y=mCH_hmCH,fill=age))+
             axis.title.x = element_blank(),
             axis.title.y = element_text(face="bold", size=10))
 
-pdf("../../output/03-aging/01-global_DNA_methyl_old_vs_young_violinplot/subclass.DNA_Global_methylation.split_violin_plot.without_significance.scale_width.wilcox_test.250115.pdf",width=8,height=6)
+pdf("../../output/03.Aging_Mouse/01-global_DNA_methyl_old_vs_young_violinplot/subclass.DNA_Global_methylation.split_violin_plot.without_significance.scale_width.wilcox_test.250115.pdf",width=8,height=6)
 plot_grid(p1,p2,p3,p4,p5,p6,ncol=1,rel_heights=c(1,1,1,1,1,2.5))
 dev.off()
 
 
 ## major class with significance test ##
 ## major class order ##
-#order.new = readRDS("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/20241011_integration_by_subclass_marker/order.majorclass.rds")
-order.new = readRDS("../../input/03-aging/order.majorclass.rds")
+order.new = readRDS("../../04.data/04.config_files/order.majorclass.rds")
 metainfo$lt_twice_class = factor(metainfo$lt_twice_class,levels=order.new)
 ## hmCG ##
 p1<-ggplot(metainfo,aes(x=lt_twice_class,y=stat_hmCG,fill=age))+
@@ -665,7 +654,7 @@ p6<-ggplot(metainfo,aes(x=lt_twice_class,y=mCH_hmCH,fill=age))+
             axis.title.x = element_blank(),
             axis.title.y = element_text(face="bold", size=10))+
     scale_y_continuous(limits=c(0, 0.06),breaks=c(0.02,0.04,0.06),labels = function(x) sprintf("%.3f", x))
-pdf("../../output/03-aging/01-global_DNA_methyl_old_vs_young_violinplot/majorclass.DNA_Global_methylation.split_violin_plot.with_significance.scale_width.wilcox_test.20250115.pdf",width=4.5,height=6)
+pdf("../../output/03.Aging_Mouse/01-global_DNA_methyl_old_vs_young_violinplot/majorclass.DNA_Global_methylation.split_violin_plot.with_significance.scale_width.wilcox_test.20250115.pdf",width=4.5,height=6)
 plot_grid(p1,p2,p3,p4,p5,p6,ncol=1,rel_heights=c(1,1,1,1,1,2))
 dev.off()
 
@@ -812,7 +801,7 @@ p6<-ggplot(metainfo,aes(x=lt_twice_class,y=mCH_hmCH,fill=age))+
             axis.title.x = element_blank(),
             axis.title.y = element_text(face="bold", size=10))+
     scale_y_continuous(limits=c(0, 0.06),breaks=c(0.02,0.04,0.06),labels = function(x) sprintf("%.3f", x))
-pdf("../../output/03-aging/01-global_DNA_methyl_old_vs_young_violinplot/majorclass.DNA_Global_methylation.split_violin_plot.without_significance.scale_width.wilcox_test.20250115.pdf",width=4.5,height=6)
+pdf("../../output/03.Aging_Mouse/01-global_DNA_methyl_old_vs_young_violinplot/majorclass.DNA_Global_methylation.split_violin_plot.without_significance.scale_width.wilcox_test.20250115.pdf",width=4.5,height=6)
 plot_grid(p1,p2,p3,p4,p5,p6,ncol=1,rel_heights=c(1,1,1,1,1,2))
 dev.off()
 
@@ -854,11 +843,9 @@ merge.reorder = merge.dataf[,c("lt_twice_subclass","hmCG_fold_change","mCG_fold_
 head(merge.reorder)
 
 ## sort by subclass order of plot ##
-#subclass_order = readRDS("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/20241011_integration_by_subclass_marker/order.subclass.rds")
-subclass_order = readRDS("../../input/03-aging/order.subclass.rds")
+subclass_order = readRDS("../../04.data/04.config_files/order.subclass.rds")
 merge.reorder$lt_twice_subclass = factor(merge.reorder$lt_twice_subclass,levels=subclass_order)
 merge.reorder = merge.reorder[order(merge.reorder$lt_twice_subclass),]
-#write.csv(merge.reorder,file="global_DNA_old_vs_young_folg_change.20250205.csv",quote=F,row.names=F,col.names=T)
-write.csv(merge.reorder,file="../../output/03-aging/global_DNA_old_vs_young_folg_change.csv",quote=F,row.names=F,col.names=T)
+write.csv(merge.reorder,file="../../output/03.Aging_Mouse/global_DNA_old_vs_young_folg_change.csv",quote=F,row.names=F,col.names=T)
 
 
