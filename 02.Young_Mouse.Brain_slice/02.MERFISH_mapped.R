@@ -19,11 +19,11 @@ if (!is.null(args$help) || is.null(args$neuron_type) || is.null(args$label)) {
 }
 
 ##### 03. set working directory #####
-# setwd("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/MERFISH/20240902")
+setwd("./")
 
 ##### 04. mapping #####
 #merged.seuratobj.sct <- readRDS(paste0(args$neuron_type,"_obj.label_transfer_",args$label,".rds"))
-merged.seuratobj.sct <- readRDS(paste0("../output/02-slice/integration/",args$neuron_type,"_obj.label_transfer_",args$label,".rds"))
+merged.seuratobj.sct <- readRDS(paste0("../output/02.Young_Mouse.Brain_slice/integration/",args$neuron_type,"_obj.label_transfer_",args$label,".rds"))
 
 ## extract UMAP loci ##
 TSNE_RNA <- data.frame(Embeddings(merged.seuratobj.sct, reduction = 'umap')[Cells(merged.seuratobj.sct),])  # extract final UMAP loci
@@ -51,8 +51,7 @@ for(i in 1:dim(dist_matrix_mat)[1]){
 
 ## extract spatial loci of Zhuang MERFISH cells nearst to each Joint-Cabernet slice cell ##
 ## Zhuang MERFISH metainfo
-#loc.df <- read.csv("/share/analysisdata/Methyl/public/analysis/data/MERFISH/Zhuang_dataset/cell_metadata_Zhuang_MERFISH.csv",colClasses = c("character","character","character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","character"))
-loc.df <- read.csv("../input/02-slice/cell_metadata_Zhuang_MERFISH.csv",colClasses = c("character","character","character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","character"))
+loc.df <- read.csv("../04.data/02.metainfo/02.Young_Mouse.Brain_slice/cell_metadata_Zhuang_MERFISH.csv",colClasses = c("character","character","character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","character"))
 rownames(loc.df) <- loc.df$cell_label
 
 x.v <- c()
@@ -89,5 +88,5 @@ TSNE_RNA <- as.matrix(TSNE_RNA)
 merged.seuratobj.sct@reductions$umap@cell.embeddings <- TSNE_RNA # assign to UMAP for plot
 
 ## save result ##
-saveRDS(merged.seuratobj.sct,file=paste0("../output/02-slice/map/",args$neuron_type,"_obj.label_transfer_",args$label,".loci_transfer.the_nearst_1_cell.rds"))
+saveRDS(merged.seuratobj.sct,file=paste0("../output/02.Young_Mouse.Brain_slice/map/",args$neuron_type,"_obj.label_transfer_",args$label,".loci_transfer.the_nearst_1_cell.rds"))
 

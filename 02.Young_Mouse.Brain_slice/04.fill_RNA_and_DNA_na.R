@@ -31,26 +31,25 @@ library(data.table)
 # setwd(paste0(indir,"")
 
 ## our seurat object ##
-merged.seuratobj.sct <- readRDS("../output/02-slice/map/merged.seuratobj.sct.loci_transfer.the_nearst_1_cell.rds")
+merged.seuratobj.sct <- readRDS("../output/02.Young_Mouse.Brain_slice/map/merged.seuratobj.sct.loci_transfer.the_nearst_1_cell.rds")
 gene.v <- rownames(merged.seuratobj.sct@assays$RNA$counts)
 metainfo = merged.seuratobj.sct@meta.data
 
 ## sample paired info ##
-#paired_sampleinfo = read.csv("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/sample_info/01_Sampleinfo/RNA_DNA_match_name_QC_MERFISH.csv",header=T)
-paired_sampleinfo = read.csv("../input/02-slice/RNA_DNA_match_name_QC_MERFISH.csv",header=T)
+paired_sampleinfo = read.csv("../04.data/02.metainfo/02.Young_Mouse.Brain_slice/RNA_DNA_match_name_QC_Joint_Cabernet_brain_slice.csv",header=T)
 
 ## load methyl matrix ##
 ## genebody ##
 ## hmC_CGN ##
 tmp_DNA <- MuDataSeurat::ReadH5AD(paste0(indir,"/5hmC_genebody.CG.pass_hmC_QC.h5ad"))
-geneslop2k_hmC_CGN <- as.data.frame(tmp_DNA@assays$RNA@counts) #read.csv("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/DNA/MERFISH/raw_fraction/5hmC_CGN.unnormalized.geneslop2k.csv.gz",row.names=1,header=T)
+geneslop2k_hmC_CGN <- as.data.frame(tmp_DNA@assays$RNA@counts) 
 rownames(geneslop2k_hmC_CGN) <- unlist(lapply(rownames(geneslop2k_hmC_CGN), function(x) strsplit(x,"\\.")[[1]][1]))
 colnames(geneslop2k_hmC_CGN) <- unlist(lapply(rownames(tmp_DNA@meta.data), function(x) strsplit(x,"allc_")[[1]][2]))
 geneslop2k_hmC_CGN <- geneslop2k_hmC_CGN[match(intersect(gene.v,rownames(geneslop2k_hmC_CGN)),rownames(geneslop2k_hmC_CGN)),]
 
 ## hmC_CHN ##
 tmp_DNA <- MuDataSeurat::ReadH5AD(paste0(indir,"/5hmC_genebody.CH.pass_hmC_QC.h5ad"))
-geneslop2k_hmC_CHN <- as.data.frame(tmp_DNA@assays$RNA@counts) #read.csv("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/DNA/MERFISH/raw_fraction/5hmC_CHN.unnormalized.geneslop2k.csv.gz",row.names=1,header=T)
+geneslop2k_hmC_CHN <- as.data.frame(tmp_DNA@assays$RNA@counts) 
 rownames(geneslop2k_hmC_CHN) <- unlist(lapply(rownames(geneslop2k_hmC_CHN), function(x) strsplit(x,"\\.")[[1]][1]))
 colnames(geneslop2k_hmC_CHN) <- unlist(lapply(rownames(tmp_DNA@meta.data), function(x) strsplit(x,"allc_")[[1]][2]))
 geneslop2k_hmC_CHN <- geneslop2k_hmC_CHN[match(gene.v,rownames(geneslop2k_hmC_CHN)),]
@@ -65,7 +64,7 @@ geneslop2k_hmCG_mCG <- geneslop2k_hmCG_mCG[match(gene.v,rownames(geneslop2k_hmCG
 
 ## hmCH_mCH ##
 tmp_DNA <- MuDataSeurat::ReadH5AD(paste0(indir,"/5mC_genebody.CH.pass_mC_QC.h5ad"))
-geneslop2k_hmCH_mCH <- as.data.frame(tmp_DNA@assays$RNA@counts) #read.csv("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/DNA/MERFISH/raw_fraction/5mC_CHN.unnormalized.geneslop2k.csv.gz",row.names=1,header=T)
+geneslop2k_hmCH_mCH <- as.data.frame(tmp_DNA@assays$RNA@counts) 
 rownames(geneslop2k_hmCH_mCH) <- unlist(lapply(rownames(geneslop2k_hmCH_mCH), function(x) strsplit(x,"\\.")[[1]][1]))
 colnames(geneslop2k_hmCH_mCH) <- unlist(lapply(rownames(tmp_DNA@meta.data), function(x) strsplit(x,"allc_")[[1]][2]))
 geneslop2k_hmCH_mCH <- geneslop2k_hmCH_mCH[match(gene.v,rownames(geneslop2k_hmCH_mCH)),]
@@ -95,14 +94,14 @@ geneslop2k_mC_CHN <- geneslop2k_mC_CHN[match(gene.v,rownames(geneslop2k_mC_CHN))
 ## promoter ##
 ## hmC_CGN ##
 tmp_DNA <- MuDataSeurat::ReadH5AD(paste0(indir,"/5hmC_promoter.CG.pass_hmC_QC.h5ad"))
-promoter_hmC_CGN <- as.data.frame(tmp_DNA@assays$RNA@counts) #read.csv("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/DNA/MERFISH/raw_fraction/5hmC_CGN.unnormalized.promoter.csv.gz",row.names=1,header=T)
+promoter_hmC_CGN <- as.data.frame(tmp_DNA@assays$RNA@counts) 
 rownames(promoter_hmC_CGN) <- unlist(lapply(rownames(promoter_hmC_CGN), function(x) strsplit(x,"\\.")[[1]][1]))
 colnames(promoter_hmC_CGN) <- unlist(lapply(rownames(tmp_DNA@meta.data), function(x) strsplit(x,"allc_")[[1]][2]))
 promoter_hmC_CGN <- promoter_hmC_CGN[match(gene.v,rownames(promoter_hmC_CGN)),]
 
 ## hmC_CHN ##
 tmp_DNA <- MuDataSeurat::ReadH5AD(paste0(indir,"/5hmC_promoter.CH.pass_hmC_QC.h5ad"))
-promoter_hmC_CHN <- as.data.frame(tmp_DNA@assays$RNA@counts) #read.csv("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/DNA/MERFISH/raw_fraction/5hmC_CHN.unnormalized.promoter.csv.gz",row.names=1,header=T)
+promoter_hmC_CHN <- as.data.frame(tmp_DNA@assays$RNA@counts) 
 rownames(promoter_hmC_CHN) <- unlist(lapply(rownames(promoter_hmC_CHN), function(x) strsplit(x,"\\.")[[1]][1]))
 colnames(promoter_hmC_CHN) <- unlist(lapply(rownames(tmp_DNA@meta.data), function(x) strsplit(x,"allc_")[[1]][2]))
 promoter_hmC_CHN <- promoter_hmC_CHN[match(gene.v,rownames(promoter_hmC_CHN)),]
@@ -117,7 +116,7 @@ promoter_hmCG_mCG <- promoter_hmCG_mCG[match(gene.v,rownames(promoter_hmCG_mCG))
 
 ## hmCH_mCH ##
 tmp_DNA <- MuDataSeurat::ReadH5AD(paste0(indir,"/5mC_promoter.CH.pass_mC_QC.h5ad"))
-promoter_hmCH_mCH <- as.data.frame(tmp_DNA@assays$RNA@counts) #read.csv("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/DNA/MERFISH/raw_fraction/5mC_CHN.unnormalized.promoter.csv.gz",row.names=1,header=T)
+promoter_hmCH_mCH <- as.data.frame(tmp_DNA@assays$RNA@counts) 
 rownames(promoter_hmCH_mCH) <- unlist(lapply(rownames(promoter_hmCH_mCH), function(x) strsplit(x,"\\.")[[1]][1]))
 colnames(promoter_hmCH_mCH) <- unlist(lapply(rownames(tmp_DNA@meta.data), function(x) strsplit(x,"allc_")[[1]][2]))
 promoter_hmCH_mCH <- promoter_hmCH_mCH[match(gene.v,rownames(promoter_hmCH_mCH)),]
@@ -206,6 +205,6 @@ RNA_fill <- fill_na_RNA(as.data.frame(merged.seuratobj.sct@assays$RNA$data))
 ## save result ##
 save(geneslop2k_hmC_CGN_fill,geneslop2k_hmC_CHN_fill,geneslop2k_hmCG_mCG_fill,geneslop2k_hmCH_mCH_fill,geneslop2k_mC_CGN_fill,geneslop2k_mC_CHN_fill,
     promoter_hmC_CGN_fill,promoter_hmC_CHN_fill,promoter_hmCG_mCG_fill,promoter_hmCH_mCH_fill,promoter_mC_CGN_fill,promoter_mC_CHN_fill,
-    RNA_fill, file="../output/02-slice/RNA_DNA_fill_na.20240925.RData")
+    RNA_fill, file="../output/02.Young_Mouse.Brain_slice/RNA_DNA_fill_na.20240925.RData")
 
 

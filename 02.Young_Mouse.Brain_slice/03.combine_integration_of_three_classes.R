@@ -1,4 +1,3 @@
-#########    All "our" in the following code refers to Joint Cabernet.
 ##### 01. import packages #####
 library(Seurat)
 now_lib <- .libPaths()
@@ -15,9 +14,9 @@ library(ggplot2)
 # outdir=""
 
 ##### 02. integrate RNA matrix #####
-exc.obj = readRDS("../output/02-slice/map/exc_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
-inh.obj = readRDS("../output/02-slice/map/inh_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
-non.obj = readRDS("../output/02-slice/map/non_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
+exc.obj = readRDS("../output/02.Young_Mouse.Brain_slice/map/exc_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
+inh.obj = readRDS("../output/02.Young_Mouse.Brain_slice/map/inh_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
+non.obj = readRDS("../output/02.Young_Mouse.Brain_slice/map/non_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
 exc.matrix = as.matrix(exc.obj@assays$RNA$counts)
 inh.matrix = as.matrix(inh.obj@assays$RNA$counts)
 non.matrix = as.matrix(non.obj@assays$RNA$counts)
@@ -25,7 +24,7 @@ non.matrix = as.matrix(non.obj@assays$RNA$counts)
 merged.df <- cbind(exc.matrix,inh.matrix,non.matrix)
 merged.seuratobj <- CreateSeuratObject(merged.df)
 merged.seuratobj$source = "Zhuang"
-merged.seuratobj$source[which(!is.na(str_match(rownames(merged.seuratobj@meta.data),"Mouses")))] = "Our"
+merged.seuratobj$source[which(!is.na(str_match(rownames(merged.seuratobj@meta.data),"Mouses")))] = "Joint_cabernet"
 
 ## step 1. select integration features ##
 merged.seuratobj.list <- SplitObject(merged.seuratobj, split.by = "source")
@@ -71,9 +70,9 @@ merged.seuratobj.sct@misc$top20Marker <- top20
 
 
 ##### 03. add sample info #####
-exc.obj = readRDS("../output/02-slice/map/exc_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
-inh.obj = readRDS("../output/02-slice/map/inh_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
-non.obj = readRDS("../output/02-slice/map/non_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
+exc.obj = readRDS("../output/02.Young_Mouse.Brain_slice/map/exc_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
+inh.obj = readRDS("../output/02.Young_Mouse.Brain_slice/map/inh_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
+non.obj = readRDS("../output/02.Young_Mouse.Brain_slice/map/non_obj.label_transfer_twice.loci_transfer.the_nearst_1_cell.rds")
 result.df = exc.obj@meta.data
 result.df = rbind(result.df,inh.obj@meta.data)
 result.df = rbind(result.df,non.obj@meta.data)
@@ -100,7 +99,7 @@ dev.off()
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_celltype
 levels(merged.seuratobj.sct)
 
-inte.col <- c("Zhuang"='lightgrey',"Our"='lightgrey',"endothelial cell"="#f173ac","oligodendrocyte"="#8A9FD1","GABAergic neuron"="#ed1941","microglial cell"="#2585a6","astrocyte"="#89288F","oligodendrocyte precursor cell"="#FF6800","glutamatergic neuron"="#90D5E4","pericyte"="#da765b","ependymal cell"="#00ae9d","choroid plexus epithelial cell"="#3283FE","smooth muscle cell"="#8552a1","vascular leptomeningeal cell"="#00538A","neuroblast (sensu Vertebrata)"="#FEE500")
+inte.col <- c("Zhuang"='lightgrey',"Joint_cabernet"='lightgrey',"endothelial cell"="#f173ac","oligodendrocyte"="#8A9FD1","GABAergic neuron"="#ed1941","microglial cell"="#2585a6","astrocyte"="#89288F","oligodendrocyte precursor cell"="#FF6800","glutamatergic neuron"="#90D5E4","pericyte"="#da765b","ependymal cell"="#00ae9d","choroid plexus epithelial cell"="#3283FE","smooth muscle cell"="#8552a1","vascular leptomeningeal cell"="#00538A","neuroblast (sensu Vertebrata)"="#FEE500")
 
 pdf(paste0(outdir,"/integration.major_celltype.tsne_all.pdf"),width = 15,height = 13)
 TSNEPlot(merged.seuratobj.sct, group.by = "major_celltype",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE)
@@ -110,22 +109,22 @@ DimPlot(merged.seuratobj.sct, group.by = "major_celltype",cols = inte.col, label
 dev.off()
 
 ## color our only ##
-merged.seuratobj.sct@meta.data$major_celltype_color_our_only = merged.seuratobj.sct$major_celltype
-merged.seuratobj.sct@meta.data$major_celltype_color_our_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
-Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_celltype_color_our_only
+merged.seuratobj.sct@meta.data$major_celltype_color_Joint_Cabernet_only = merged.seuratobj.sct$major_celltype
+merged.seuratobj.sct@meta.data$major_celltype_color_Joint_Cabernet_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
+Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_celltype_color_Joint_Cabernet_only
 levels(merged.seuratobj.sct)
 
 
-pdf(paste0(outdir,"/integration.major_celltype.tsne_color_our_only.pdf"),width = 15,height = 13)
-TSNEPlot(merged.seuratobj.sct, group.by = "major_celltype_color_our_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/integration.major_celltype.tsne_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+TSNEPlot(merged.seuratobj.sct, group.by = "major_celltype_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
 dev.off()
-pdf(paste0(outdir,"/integration.major_celltype.UMAP_color_our_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "major_celltype_color_our_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/integration.major_celltype.UMAP_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+DimPlot(merged.seuratobj.sct, group.by = "major_celltype_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
 dev.off()
 
 ## color zhuang only ##
 merged.seuratobj.sct@meta.data$major_celltype_color_zhuang_only = merged.seuratobj.sct$major_celltype
-merged.seuratobj.sct@meta.data$major_celltype_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Our"
+merged.seuratobj.sct@meta.data$major_celltype_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Joint_cabernet"
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_celltype_color_zhuang_only
 levels(merged.seuratobj.sct)
 
@@ -141,7 +140,7 @@ dev.off()
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_brain_region_v2
 levels(merged.seuratobj.sct)
 
-inte.col <- c("Our"='lightgrey',"Zhuang"='lightgrey',"Isocortex"="#C06CAB", "Hippocampus"="#90D5E4", "LeftCortex"="#8A9FD1", "LeftHippo"="#ed1941", "RightCortex"="#FEE500", "RightHippo"="#b2d235")
+inte.col <- c("Joint_cabernet"='lightgrey',"Zhuang"='lightgrey',"Isocortex"="#C06CAB", "Hippocampus"="#90D5E4", "LeftCortex"="#8A9FD1", "LeftHippo"="#ed1941", "RightCortex"="#FEE500", "RightHippo"="#b2d235")
 
 pdf(paste0(outdir,"/integration.major_brain_region_v2.tsne_all.pdf"),width = 15,height = 13)
 TSNEPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
@@ -151,33 +150,33 @@ DimPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2",cols = inte.col
 dev.off()
 
 ## color our only ##
-merged.seuratobj.sct@meta.data$major_brain_region_v2_color_our_only <- merged.seuratobj.sct@meta.data$major_brain_region_v2
-merged.seuratobj.sct@meta.data$major_brain_region_v2_color_our_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
-Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_brain_region_v2_color_our_only
+merged.seuratobj.sct@meta.data$major_brain_region_v2_color_Joint_Cabernet_only <- merged.seuratobj.sct@meta.data$major_brain_region_v2
+merged.seuratobj.sct@meta.data$major_brain_region_v2_color_Joint_Cabernet_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
+Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_brain_region_v2_color_Joint_Cabernet_only
 levels(merged.seuratobj.sct)
 
-inte.col <- c("Our"='lightgrey',"Zhuang"='lightgrey',"Isocortex"="#C06CAB", "Hippocampus"="#90D5E4", "LeftCortex"="#8A9FD1", "LeftHippo"="#ed1941", "RightCortex"="#FEE500", "RightHippo"="#b2d235")
+inte.col <- c("Joint_cabernet"='lightgrey',"Zhuang"='lightgrey',"Isocortex"="#C06CAB", "Hippocampus"="#90D5E4", "LeftCortex"="#8A9FD1", "LeftHippo"="#ed1941", "RightCortex"="#FEE500", "RightHippo"="#b2d235")
 
-pdf(paste0(outdir,"/integration.major_brain_region_v2.tsne_color_our_only.pdf"),width = 15,height = 13)
-TSNEPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_our_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/integration.major_brain_region_v2.tsne_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+TSNEPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
 dev.off()
-pdf(paste0(outdir,"/integration.major_brain_region_v2.UMAP_color_our_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_our_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/integration.major_brain_region_v2.UMAP_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+DimPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
 dev.off()
 
 ## color zhuang only ##
 merged.seuratobj.sct@meta.data$major_brain_region_v2_color_zhuang_only <- merged.seuratobj.sct@meta.data$major_brain_region_v2
-merged.seuratobj.sct@meta.data$major_brain_region_v2_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Our"
+merged.seuratobj.sct@meta.data$major_brain_region_v2_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Joint_cabernet"
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_brain_region_v2_color_zhuang_only
 levels(merged.seuratobj.sct)
 
-inte.col <- c("Our"='lightgrey',"Zhuang"='lightgrey',"Isocortex"="#C06CAB", "Hippocampus"="#90D5E4", "LeftCortex"="#8A9FD1", "LeftHippo"="#ed1941", "RightCortex"="#FEE500", "RightHippo"="#b2d235")
+inte.col <- c("Joint_cabernet"='lightgrey',"Zhuang"='lightgrey',"Isocortex"="#C06CAB", "Hippocampus"="#90D5E4", "LeftCortex"="#8A9FD1", "LeftHippo"="#ed1941", "RightCortex"="#FEE500", "RightHippo"="#b2d235")
 
 pdf(paste0(outdir,"/integration.major_brain_region_v2.tsne_color_zhuang_only.pdf"),width = 15,height = 13)
-TSNEPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_zhuang_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Hippocampus","Isocortex","Our"))
+TSNEPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_zhuang_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Hippocampus","Isocortex","Joint_cabernet"))
 dev.off()
 pdf(paste0(outdir,"/integration.major_brain_region_v2.UMAP_color_zhuang_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_zhuang_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Hippocampus","Isocortex","Our"))
+DimPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_zhuang_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Hippocampus","Isocortex","Joint_cabernet"))
 dev.off()
 
 ## 04. subclass ##
@@ -185,17 +184,17 @@ dev.off()
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$subclass
 levels(merged.seuratobj.sct)
 
-inte.col <- c("Our"='lightgrey',"Zhuang"='lightgrey',"Oligo NN" = "#f173ac", "Astro-TE NN" = "#0C727C",
-                 "L2/3 IT CTX Glut" = "#ed1941", "Sst Gaba" = "#2585a6", "L6 IT CTX Glut" = "#89288F", 
-                 "OPC NN" = "#F47D2B", "L5 ET CTX Glut" = "#FEE500", "Microglia NN" = "#da765b",  
-                 "Peri NN" = "#90D5E4", "CA2-FC-IG Glut" = "#00538A", "Lamp5 Gaba" = "#00ae9d", 
-                 "Endo NN" = "#1d953f", "DG Glut" = "#FF6800", "L4/5 IT CTX Glut" = "#009ad6", 
-                 "Vip Gaba" = "#DEA0FD", "L6 CT CTX Glut" = "#6E4B9E", "Pvalb Gaba" = "#65c294", 
-                 "CLA-EPd-CTX Car3 Glut" = "#AA0DFE", "L2/3 IT RSP Glut" = '#e74c3c', "CA3 Glut" = "#89C75F",
-                 "Ependymal NN"="#A6BDD7","CHOR NN"="#B32851","HPF CR Glut"="#F6768E","CA1-ProS Glut"="#b2d235",
-                 "L5 NP CTX Glut"="#F4C800","SMC NN"="#C06CAB","VLMC NN"="#007947","L4 RSP-ACA Glut"="#8A9FD1","DG-PIR Ex IMN"='#5AC2F1FF',
-                 "L5 IT CTX Glut" = "#FFB300", "L6b CTX Glut" = '#3498db',"Lamp5 Lhx6 Gaba"='#00a6ac',"RHP-COA Ndnf Gaba"="#e4c6d0",
-                 "Sncg Gaba"="#f9906f","Sst Chodl Gaba"="#ffc773","STR D2 Gaba"="#88c4e8","OB-STR-CTX Inh IMN"="#eb7f54")
+inte.col <- c("Joint_cabernet"='lightgrey',"Zhuang"='lightgrey',"Oligo NN" = "#89C75F", "Astro-TE NN" = "#0C727C",
+                               "L2/3 IT CTX Glut" = "#ed1941", "Sst Gaba" = "#2585a6", "L6 IT CTX Glut" = "#89288F",
+                               "OPC NN" = "#F47D2B", "L5 ET CTX Glut" = "#FEE500", "Microglia NN" = "#f26b85",
+                               "Peri NN" = "#90D5E4", "CA2-FC-IG Glut" = "#f173ac", "Lamp5 Gaba" = "#00ae9d",
+                               "Endo NN" = "#1d953f", "DG Glut" = "#FF6800", "L4/5 IT CTX Glut" = "#009ad6",
+                               "Vip Gaba" = "#DEA0FD", "L6 CT CTX Glut" = "#6E4B9E", "Pvalb Gaba" = "#65c294",
+                               "CLA-EPd-CTX Car3 Glut" = "#AA0DFE", "L2/3 IT RSP Glut" = '#e74c3c', "CA3 Glut" = "#00538A",
+                               "Ependymal NN"="#A6BDD7","CHOR NN"="#B32851","HPF CR Glut"="#F6768E","CA1-ProS Glut"="#b2d235",
+                               "L5 NP CTX Glut"="#F4C800","SMC NN"="#C06CAB","VLMC NN"="#007947","L4 RSP-ACA Glut"="#8A9FD1","DG-PIR Ex IMN"='#5AC2F1',
+                               "L5 IT CTX Glut" = "#FFB300", "L6b CTX Glut" = '#3498db',"Lamp5 Lhx6 Gaba"='#057771',"RHP-COA Ndnf Gaba"="#e4c6d0",
+                               "Sncg Gaba"='#915ce5',"Sst Chodl Gaba"="#ffc773","STR D2 Gaba"="#88c4e8","OB-STR-CTX Inh IMN"="#eb7f54")
 
 pdf(paste0(outdir,"/integration.subclass.tsne_all.pdf"),width = 17,height = 13)
 TSNEPlot(merged.seuratobj.sct, group.by = "subclass",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE)
@@ -205,22 +204,22 @@ DimPlot(merged.seuratobj.sct, group.by = "subclass",cols = inte.col, label=FALSE
 dev.off()
 
 ## color our only ##
-merged.seuratobj.sct$subclass_color_our_only <- merged.seuratobj.sct@meta.data$subclass
-merged.seuratobj.sct$subclass_color_our_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
+merged.seuratobj.sct$subclass_color_Joint_Cabernet_only <- merged.seuratobj.sct@meta.data$subclass
+merged.seuratobj.sct$subclass_color_Joint_Cabernet_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
 
-Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$subclass_color_our_only
+Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$subclass_color_Joint_Cabernet_only
 levels(merged.seuratobj.sct)
 
-pdf(paste0(outdir,"/integration.subclass.tsne_color_our_only.pdf"),width = 17,height = 13)
-TSNEPlot(merged.seuratobj.sct, group.by = "subclass_color_our_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/integration.subclass.tsne_color_Joint_Cabernet_only.pdf"),width = 17,height = 13)
+TSNEPlot(merged.seuratobj.sct, group.by = "subclass_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
 dev.off()
-pdf(paste0(outdir,"/integration.subclass.UMAP_color_our_only.pdf"),width = 17,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "subclass_color_our_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/integration.subclass.UMAP_color_Joint_Cabernet_only.pdf"),width = 17,height = 13)
+DimPlot(merged.seuratobj.sct, group.by = "subclass_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
 dev.off()
 
 ## color zhuang only ##
 merged.seuratobj.sct$subclass_color_zhuang_only <- merged.seuratobj.sct@meta.data$subclass
-merged.seuratobj.sct$subclass_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Our"
+merged.seuratobj.sct$subclass_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Joint_cabernet"
 
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$subclass_color_zhuang_only
 levels(merged.seuratobj.sct)
@@ -236,17 +235,17 @@ dev.off()
 ## all ##
 merged.seuratobj.sct$source = NA
 merged.seuratobj.sct$source[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] = "Zhuang"
-merged.seuratobj.sct$source[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] = "Our"
+merged.seuratobj.sct$source[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] = "Joint_cabernet"
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$source
 levels(merged.seuratobj.sct)
 
 inte.col <- setNames(c('#3498db','#e74c3c'),
-                    c("Zhuang","Our"))
+                    c("Zhuang","Joint_cabernet"))
 pdf(paste0(outdir,"/integration.source.tsne_all.pdf"),width = 15,height = 13)
-TSNEPlot(merged.seuratobj.sct, group.by = "source",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Our","Zhuang"))
+TSNEPlot(merged.seuratobj.sct, group.by = "source",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Joint_cabernet","Zhuang"))
 dev.off()
 pdf(paste0(outdir,"/integration.source.UMAP_all.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "source",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Our","Zhuang"))
+DimPlot(merged.seuratobj.sct, group.by = "source",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Joint_cabernet","Zhuang"))
 dev.off()
 
 ## 06. neuron vs non-neuron ##
@@ -270,33 +269,33 @@ DimPlot(merged.seuratobj.sct, group.by = "neuron_type",cols = inte.col, label=FA
 dev.off()
 
 ## color our only ##
-merged.seuratobj.sct$neuron_type_color_our_only <- merged.seuratobj.sct$neuron_type
-merged.seuratobj.sct$neuron_type_color_our_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
-Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$neuron_type_color_our_only
+merged.seuratobj.sct$neuron_type_color_Joint_Cabernet_only <- merged.seuratobj.sct$neuron_type
+merged.seuratobj.sct$neuron_type_color_Joint_Cabernet_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
+Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$neuron_type_color_Joint_Cabernet_only
 levels(merged.seuratobj.sct)
 inte.col <- setNames(c('#3498db','#e74c3c','lightgray'),
-                    c("Neuron","Non-neuron","Zhuang"))#levels(merged_filter1.seuratobj.sct))
+                    c("Neuron","Non-neuron","Zhuang"))
 
-pdf(paste0(outdir,"/integration.neuron_vs_nonneuron.tsne_color_our_only.pdf"),width = 15,height = 13)
-TSNEPlot(merged.seuratobj.sct, group.by = "neuron_type_color_our_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Zhuang"))
+pdf(paste0(outdir,"/integration.neuron_vs_nonneuron.tsne_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+TSNEPlot(merged.seuratobj.sct, group.by = "neuron_type_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Zhuang"))
 dev.off()
-pdf(paste0(outdir,"/integration.neuron_vs_nonneuron.UMAP_color_our_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "neuron_type_color_our_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Zhuang"))
+pdf(paste0(outdir,"/integration.neuron_vs_nonneuron.UMAP_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+DimPlot(merged.seuratobj.sct, group.by = "neuron_type_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Zhuang"))
 dev.off()
 
 ## color zhuang only ##
 merged.seuratobj.sct$neuron_type_color_zhuang_only <- merged.seuratobj.sct$neuron_type
-merged.seuratobj.sct$neuron_type_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Our"
+merged.seuratobj.sct$neuron_type_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Joint_cabernet"
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$neuron_type_color_zhuang_only
 levels(merged.seuratobj.sct)
 inte.col <- setNames(c('#3498db','#e74c3c','lightgray'),
-                    c("Neuron","Non-neuron","Our"))#levels(merged_filter1.seuratobj.sct))
+                    c("Neuron","Non-neuron","Joint_cabernet"))
 
 pdf(paste0(outdir,"/integration.neuron_vs_nonneuron.tsne_color_zhuang_only.pdf"),width = 15,height = 13)
-TSNEPlot(merged.seuratobj.sct, group.by = "neuron_type_color_zhuang_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Our"))
+TSNEPlot(merged.seuratobj.sct, group.by = "neuron_type_color_zhuang_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Joint_cabernet"))
 dev.off()
 pdf(paste0(outdir,"/integration.neuron_vs_nonneuron.UMAP_color_zhuang_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "neuron_type_color_zhuang_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Our"))
+DimPlot(merged.seuratobj.sct, group.by = "neuron_type_color_zhuang_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Joint_cabernet"))
 dev.off()
 
 ##### 07.three class #####
@@ -309,7 +308,7 @@ Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$three_class
 levels(merged.seuratobj.sct)
 
 inte.col <- setNames(c("#FFB300",'#3498db','#e74c3c','lightgray','lightgray'),
-                    c("Inh","Exc","Non-neuron","Zhuang","Our"))
+                    c("Inh","Exc","Non-neuron","Zhuang","Joint_cabernet"))
 ## all ##
 pdf(paste0(outdir,"/integration.three_class.tsne_all.pdf"),width = 15,height = 13)
 TSNEPlot(merged.seuratobj.sct, group.by = "three_class",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE)
@@ -319,21 +318,21 @@ DimPlot(merged.seuratobj.sct, group.by = "three_class",cols = inte.col, label=FA
 dev.off()
 
 ## color our only ##
-merged.seuratobj.sct$three_class_color_our_only <- merged.seuratobj.sct$three_class
-merged.seuratobj.sct$three_class_color_our_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
-Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$three_class_color_our_only
+merged.seuratobj.sct$three_class_color_Joint_Cabernet_only <- merged.seuratobj.sct$three_class
+merged.seuratobj.sct$three_class_color_Joint_Cabernet_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
+Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$three_class_color_Joint_Cabernet_only
 levels(merged.seuratobj.sct)
 
-pdf(paste0(outdir,"/integration.three_class.tsne_color_our_only.pdf"),width = 15,height = 13)
-TSNEPlot(merged.seuratobj.sct, group.by = "three_class_color_our_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/integration.three_class.tsne_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+TSNEPlot(merged.seuratobj.sct, group.by = "three_class_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = rev(levels(merged.seuratobj.sct)))
 dev.off()
-pdf(paste0(outdir,"/integration.three_class.UMAP_color_our_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "three_class_color_our_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/integration.three_class.UMAP_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+DimPlot(merged.seuratobj.sct, group.by = "three_class_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =3,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = rev(levels(merged.seuratobj.sct)))
 dev.off()
 
 ## color zhuang only ##
 merged.seuratobj.sct$three_class_color_zhuang_only <- merged.seuratobj.sct$three_class
-merged.seuratobj.sct$three_class_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Our"
+merged.seuratobj.sct$three_class_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Joint_cabernet"
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$three_class_color_zhuang_only
 levels(merged.seuratobj.sct)
 pdf(paste0(outdir,"/integration.three_class.tsne_color_zhuang_only.pdf"),width = 15,height = 13)
@@ -357,7 +356,7 @@ loci_inte.df = as.matrix(loci_inte.df)
 merged.seuratobj.sct@reductions$umap@cell.embeddings <- loci_inte.df
 
 ## save result ##
-saveRDS(merged.seuratobj.sct,file="../output/02-slice/map/merged.seuratobj.sct.loci_transfer.the_nearst_1_cell.rds")
+saveRDS(merged.seuratobj.sct,file="../output/02.Young_Mouse.Brain_slice/map/merged.seuratobj.sct.loci_transfer.the_nearst_1_cell.rds")
 
 ## start plot ##
 if (!dir.exists(paste0("spatial_plot_",1))) {  
@@ -383,27 +382,27 @@ DimPlot(merged.seuratobj.sct, group.by = "neuron_type",cols = our.col, label=FAL
 dev.off()
 
 ## color our only ##
-Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$neuron_type_color_our_only
+Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$neuron_type_color_Joint_Cabernet_only
 levels(merged.seuratobj.sct)
 our.col <- setNames(c('#3498db','#e74c3c','lightgray'),
                     c("Neuron","Non-neuron","Zhuang"))#levels(merged_filter1.seuratobj.sct))
 
-pdf(paste0(outdir,"/spatial_plot_",1,"/integration.neuron_vs_nonneuron.umap_color_our_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "neuron_type_color_our_only",cols = our.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Zhuang"))
+pdf(paste0(outdir,"/spatial_plot_",1,"/integration.neuron_vs_nonneuron.umap_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+DimPlot(merged.seuratobj.sct, group.by = "neuron_type_color_Joint_Cabernet_only",cols = our.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Zhuang"))
 dev.off()
 
 ## color zhuang only ##
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$neuron_type_color_zhuang_only
 levels(merged.seuratobj.sct)
 our.col <- setNames(c('#3498db','#e74c3c','lightgray'),
-                    c("Neuron","Non-neuron","Our"))#levels(merged_filter1.seuratobj.sct))
+                    c("Neuron","Non-neuron","Joint_cabernet"))#levels(merged_filter1.seuratobj.sct))
 
 pdf(paste0(outdir,"/spatial_plot_",1,"/integration.neuron_vs_nonneuron.umap_color_zhuang_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "neuron_type_color_zhuang_only",cols = our.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Our"))
+DimPlot(merged.seuratobj.sct, group.by = "neuron_type_color_zhuang_only",cols = our.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = c("Neuron","Non-neuron","Joint_cabernet"))
 dev.off()
 
 ## 03. cell type ##
-inte.col <- c("Zhuang"='lightgrey',"Our"='lightgrey',"endothelial cell"="#f173ac","oligodendrocyte"="#8A9FD1","GABAergic neuron"="#ed1941","microglial cell"="#2585a6","astrocyte"="#89288F","oligodendrocyte precursor cell"="#FF6800","glutamatergic neuron"="#90D5E4","pericyte"="#da765b","ependymal cell"="#00ae9d","choroid plexus epithelial cell"="#3283FE","smooth muscle cell"="#8552a1","vascular leptomeningeal cell"="#00538A","neuroblast (sensu Vertebrata)"="#FEE500")
+inte.col <- c("Zhuang"='lightgrey',"Joint_cabernet"='lightgrey',"endothelial cell"="#f173ac","oligodendrocyte"="#8A9FD1","GABAergic neuron"="#ed1941","microglial cell"="#2585a6","astrocyte"="#89288F","oligodendrocyte precursor cell"="#FF6800","glutamatergic neuron"="#90D5E4","pericyte"="#da765b","ependymal cell"="#00ae9d","choroid plexus epithelial cell"="#3283FE","smooth muscle cell"="#8552a1","vascular leptomeningeal cell"="#00538A","neuroblast (sensu Vertebrata)"="#FEE500")
 
 ## all ##
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_celltype
@@ -414,11 +413,11 @@ DimPlot(merged.seuratobj.sct, group.by = "major_celltype",cols = inte.col, label
 dev.off()
 
 ## color our only ##
-Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_celltype_color_our_only
+Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_celltype_color_Joint_Cabernet_only
 levels(merged.seuratobj.sct)
 
-pdf(paste0(outdir,"/spatial_plot_",1,"/integration.major_celltype.umap_color_our_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "major_celltype_color_our_only",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/spatial_plot_",1,"/integration.major_celltype.umap_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+DimPlot(merged.seuratobj.sct, group.by = "major_celltype_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
 dev.off()
 
 ## color zhuang only ##
@@ -430,7 +429,7 @@ DimPlot(merged.seuratobj.sct, group.by = "major_celltype_color_zhuang_only",cols
 dev.off()
 
 ## 04. major brain region ##
-inte.col <- c("Our"='lightgrey',"Zhuang"='lightgrey',"Isocortex"="#C06CAB", "Hippocampus"="#90D5E4", "LeftCortex"="#8A9FD1", "LeftHippo"="#ed1941", "RightCortex"="#FEE500", "RightHippo"="#b2d235")
+inte.col <- c("Joint_cabernet"='lightgrey',"Zhuang"='lightgrey',"Isocortex"="#C06CAB", "Hippocampus"="#90D5E4", "LeftCortex"="#8A9FD1", "LeftHippo"="#ed1941", "RightCortex"="#FEE500", "RightHippo"="#b2d235")
 
 ## all: Isocortex Hippocampus ##
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_brain_region_v2
@@ -441,11 +440,11 @@ DimPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2",cols = inte.col
 dev.off()
 
 ## color our only ##
-Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_brain_region_v2_color_our_only
+Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_brain_region_v2_color_Joint_Cabernet_only
 levels(merged.seuratobj.sct)
 
-pdf(paste0(outdir,"/spatial_plot_",1,"/integration.major_brain_region_v2.umap_color_our_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_our_only",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/spatial_plot_",1,"/integration.major_brain_region_v2.umap_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+DimPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
 dev.off()
 
 ## color zhuang only ##
@@ -453,21 +452,21 @@ Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$major_brain_region_v2_color
 levels(merged.seuratobj.sct)
 
 pdf(paste0(outdir,"/spatial_plot_",1,"/integration.major_brain_region_v2.umap_color_zhuang_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_zhuang_only",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Fiber_tracts","Hypothalamus","Olfactory","Striatum","Ventricular_systems","Cortical_subplate","Pallidum","Thalamus","Isocortex","Hippocampus","Our","NA"))
+DimPlot(merged.seuratobj.sct, group.by = "major_brain_region_v2_color_zhuang_only",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Fiber_tracts","Hypothalamus","Olfactory","Striatum","Ventricular_systems","Cortical_subplate","Pallidum","Thalamus","Isocortex","Hippocampus","Joint_cabernet","NA"))
 dev.off()
 
 ## 05. subclass_transfer ##
-inte.col <- c("Our"='lightgrey',"Zhuang"='lightgrey',"Oligo NN" = "#f173ac", "Astro-TE NN" = "#0C727C",
-                 "L2/3 IT CTX Glut" = "#ed1941", "Sst Gaba" = "#2585a6", "L6 IT CTX Glut" = "#89288F", 
-                 "OPC NN" = "#F47D2B", "L5 ET CTX Glut" = "#FEE500", "Microglia NN" = "#da765b",  
-                 "Peri NN" = "#90D5E4", "CA2-FC-IG Glut" = "#00538A", "Lamp5 Gaba" = "#00ae9d", 
-                 "Endo NN" = "#1d953f", "DG Glut" = "#FF6800", "L4/5 IT CTX Glut" = "#009ad6", 
-                 "Vip Gaba" = "#DEA0FD", "L6 CT CTX Glut" = "#6E4B9E", "Pvalb Gaba" = "#65c294", 
-                 "CLA-EPd-CTX Car3 Glut" = "#AA0DFE", "L2/3 IT RSP Glut" = '#e74c3c', "CA3 Glut" = "#89C75F",
-                 "Ependymal NN"="#A6BDD7","CHOR NN"="#B32851","HPF CR Glut"="#F6768E","CA1-ProS Glut"="#b2d235",
-                 "L5 NP CTX Glut"="#F4C800","SMC NN"="#C06CAB","VLMC NN"="#007947","L4 RSP-ACA Glut"="#8A9FD1","DG-PIR Ex IMN"='#5AC2F1FF',
-                 "L5 IT CTX Glut" = "#FFB300", "L6b CTX Glut" = '#3498db',"Lamp5 Lhx6 Gaba"='#00a6ac',"RHP-COA Ndnf Gaba"="#e4c6d0",
-                 "Sncg Gaba"="#f9906f","Sst Chodl Gaba"="#ffc773","STR D2 Gaba"="#88c4e8","OB-STR-CTX Inh IMN"="#eb7f54")
+inte.col <- c("Joint_cabernet"='lightgrey',"Zhuang"='lightgrey',"Oligo NN" = "#89C75F", "Astro-TE NN" = "#0C727C",
+                               "L2/3 IT CTX Glut" = "#ed1941", "Sst Gaba" = "#2585a6", "L6 IT CTX Glut" = "#89288F",
+                               "OPC NN" = "#F47D2B", "L5 ET CTX Glut" = "#FEE500", "Microglia NN" = "#f26b85",
+                               "Peri NN" = "#90D5E4", "CA2-FC-IG Glut" = "#f173ac", "Lamp5 Gaba" = "#00ae9d",
+                               "Endo NN" = "#1d953f", "DG Glut" = "#FF6800", "L4/5 IT CTX Glut" = "#009ad6",
+                               "Vip Gaba" = "#DEA0FD", "L6 CT CTX Glut" = "#6E4B9E", "Pvalb Gaba" = "#65c294",
+                               "CLA-EPd-CTX Car3 Glut" = "#AA0DFE", "L2/3 IT RSP Glut" = '#e74c3c', "CA3 Glut" = "#00538A",
+                               "Ependymal NN"="#A6BDD7","CHOR NN"="#B32851","HPF CR Glut"="#F6768E","CA1-ProS Glut"="#b2d235",
+                               "L5 NP CTX Glut"="#F4C800","SMC NN"="#C06CAB","VLMC NN"="#007947","L4 RSP-ACA Glut"="#8A9FD1","DG-PIR Ex IMN"='#5AC2F1',
+                               "L5 IT CTX Glut" = "#FFB300", "L6b CTX Glut" = '#3498db',"Lamp5 Lhx6 Gaba"='#057771',"RHP-COA Ndnf Gaba"="#e4c6d0",
+                               "Sncg Gaba"='#915ce5',"Sst Chodl Gaba"="#ffc773","STR D2 Gaba"="#88c4e8","OB-STR-CTX Inh IMN"="#eb7f54")
 
 ## all ##
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$subclass
@@ -478,11 +477,11 @@ DimPlot(merged.seuratobj.sct, group.by = "subclass",cols = inte.col, label=FALSE
 dev.off()
 
 ## color our only ##
-Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$subclass_color_our_only
+Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$subclass_color_Joint_Cabernet_only
 levels(merged.seuratobj.sct)
 
-pdf(paste0(outdir,"/spatial_plot_",1,"/integration.subclass.umap_color_our_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "subclass_color_our_only",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/spatial_plot_",1,"/integration.subclass.umap_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+DimPlot(merged.seuratobj.sct, group.by = "subclass_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=rev(levels(merged.seuratobj.sct)))
 dev.off()
 
 ## color zhuang only ##
@@ -498,9 +497,9 @@ Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$source
 levels(merged.seuratobj.sct)
 
 inte.col <- setNames(c('#3498db','#e74c3c'),
-                    c("Zhuang","Our"))
+                    c("Zhuang","Joint_cabernet"))
 pdf(paste0(outdir,"/spatial_plot_",1,"/integration.source.umap_all.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "source",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Our","Zhuang"))
+DimPlot(merged.seuratobj.sct, group.by = "source",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Joint_cabernet","Zhuang"))
 dev.off()
 
 ## 07.three class ##
@@ -508,7 +507,7 @@ Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$three_class
 levels(merged.seuratobj.sct)
 
 inte.col <- setNames(c("#FFB300",'#3498db','#e74c3c','lightgray','lightgray'),
-                    c("Inh","Exc","Non-neuron","Zhuang","Our"))
+                    c("Inh","Exc","Non-neuron","Zhuang","Joint_cabernet"))
 
 ## all ##
 pdf(paste0(outdir,"/spatial_plot_1/integration.three_class.UMAP_all.pdf"),width = 15,height = 13)
@@ -516,18 +515,18 @@ DimPlot(merged.seuratobj.sct, group.by = "three_class",cols = inte.col, label=FA
 dev.off()
 
 ## color our only ##
-merged.seuratobj.sct$three_class_color_our_only <- merged.seuratobj.sct$three_class
-merged.seuratobj.sct$three_class_color_our_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
-Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$three_class_color_our_only
+merged.seuratobj.sct$three_class_color_Joint_Cabernet_only <- merged.seuratobj.sct$three_class
+merged.seuratobj.sct$three_class_color_Joint_Cabernet_only[which(is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Zhuang"
+Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$three_class_color_Joint_Cabernet_only
 levels(merged.seuratobj.sct)
 
-pdf(paste0(outdir,"/spatial_plot_1/integration.three_class.UMAP_color_our_only.pdf"),width = 15,height = 13)
-DimPlot(merged.seuratobj.sct, group.by = "three_class_color_our_only",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = rev(levels(merged.seuratobj.sct)))
+pdf(paste0(outdir,"/spatial_plot_1/integration.three_class.UMAP_color_Joint_Cabernet_only.pdf"),width = 15,height = 13)
+DimPlot(merged.seuratobj.sct, group.by = "three_class_color_Joint_Cabernet_only",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order = rev(levels(merged.seuratobj.sct)))
 dev.off()
 
 ## color zhuang only ##
 merged.seuratobj.sct$three_class_color_zhuang_only <- merged.seuratobj.sct$three_class
-merged.seuratobj.sct$three_class_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Our"
+merged.seuratobj.sct$three_class_color_zhuang_only[which(!is.na(str_match(rownames(merged.seuratobj.sct@meta.data),"Mouses")))] <- "Joint_cabernet"
 Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$three_class_color_zhuang_only
 levels(merged.seuratobj.sct)
 
@@ -549,11 +548,11 @@ color_one_cluster_plot <- function(cl, data){
     if(data == "all"){
         merged.seuratobj.sct$color_one_cluster <- "other_cluster"
         merged.seuratobj.sct$color_one_cluster[intersect(which(merged.seuratobj.sct$major_celltype == cl),which(merged.seuratobj.sct$source == "Zhuang"))] <- "Zhuang"
-        merged.seuratobj.sct$color_one_cluster[intersect(which(merged.seuratobj.sct$major_celltype == cl),which(merged.seuratobj.sct$source == "Our"))] <- "Our"
+        merged.seuratobj.sct$color_one_cluster[intersect(which(merged.seuratobj.sct$major_celltype == cl),which(merged.seuratobj.sct$source == "Joint_cabernet"))] <- "Joint_cabernet"
         Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$color_one_cluster
         levels(merged.seuratobj.sct)
-        inte.col <- c("other_cluster"='lightgrey',"Zhuang"="#415284", "Our"="#EE934E") #"Zhuang"='#3498db',"Our"='#e74c3c')
-        pic <- DimPlot(merged.seuratobj.sct, group.by = "color_one_cluster",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Our","Zhuang","other_cluster"))
+        inte.col <- c("other_cluster"='lightgrey',"Zhuang"="#415284", "Joint_cabernet"="#EE934E") #"Zhuang"='#3498db',"Joint_cabernet"='#e74c3c')
+        pic <- DimPlot(merged.seuratobj.sct, group.by = "color_one_cluster",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Joint_cabernet","Zhuang","other_cluster"))
         ggsave(pic,file=paste0(outdir,"/color_one_cluster_plot_",1,"/integration.only_color_",cl,".umap_",data,".color_by_source.pdf"),height=13,width=15)
 
         merged.seuratobj.sct$color_one_cluster <- "other_cluster"
@@ -574,7 +573,7 @@ color_one_cluster_plot <- function(cl, data){
 
 ## run function ##
 for (cl in unique(merged.seuratobj.sct$major_celltype)){
-    for(data in c("all","Zhuang","Our")){
+    for(data in c("all","Zhuang","Joint_cabernet")){
         color_one_cluster_plot(cl,data)
     }
 }
@@ -589,11 +588,11 @@ color_one_subclass_plot <- function(cl, data){
     if(data == "all"){
         merged.seuratobj.sct$color_one_subclass <- "other_subclass"
         merged.seuratobj.sct$color_one_subclass[intersect(which(merged.seuratobj.sct$subclass == cl),which(merged.seuratobj.sct$source == "Zhuang"))] <- "Zhuang"
-        merged.seuratobj.sct$color_one_subclass[intersect(which(merged.seuratobj.sct$subclass == cl),which(merged.seuratobj.sct$source == "Our"))] <- "Our"
+        merged.seuratobj.sct$color_one_subclass[intersect(which(merged.seuratobj.sct$subclass == cl),which(merged.seuratobj.sct$source == "Joint_cabernet"))] <- "Joint_cabernet"
         Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$color_one_subclass
         levels(merged.seuratobj.sct)
-        inte.col <- c("other_subclass"='lightgrey',"Zhuang"="#415284", "Our"="#EE934E") #"Zhuang"='#3498db',"Our"='#e74c3c')
-        pic <- DimPlot(merged.seuratobj.sct, group.by = "color_one_subclass",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Our","Zhuang","other_cluster"))
+        inte.col <- c("other_subclass"='lightgrey',"Zhuang"="#415284", "Joint_cabernet"="#EE934E") #"Zhuang"='#3498db',"Joint_cabernet"='#e74c3c')
+        pic <- DimPlot(merged.seuratobj.sct, group.by = "color_one_subclass",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Joint_cabernet","Zhuang","other_cluster"))
         ggsave(pic,file=paste0(outdir,"/color_one_subclass_plot_",1,"/integration.only_color_",str_replace(cl, "/", " "),".umap_",data,".color_by_source.pdf"),height=13,width=15)
 
         merged.seuratobj.sct$color_one_subclass <- "other_subclass"
@@ -606,17 +605,17 @@ color_one_subclass_plot <- function(cl, data){
     Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$color_one_subclass
     levels(merged.seuratobj.sct)
 
-    inte.col <- c("other_subclass"='lightgrey',"Our"='lightgrey',"Zhuang"='lightgrey',"Oligo NN" = "#f173ac", "Astro-TE NN" = "#0C727C",
-                 "L2/3 IT CTX Glut" = "#ed1941", "Sst Gaba" = "#2585a6", "L6 IT CTX Glut" = "#89288F", 
-                 "OPC NN" = "#F47D2B", "L5 ET CTX Glut" = "#FEE500", "Microglia NN" = "#da765b",  
-                 "Peri NN" = "#90D5E4", "CA2-FC-IG Glut" = "#00538A", "Lamp5 Gaba" = "#00ae9d", 
-                 "Endo NN" = "#1d953f", "DG Glut" = "#FF6800", "L4/5 IT CTX Glut" = "#009ad6", 
-                 "Vip Gaba" = "#DEA0FD", "L6 CT CTX Glut" = "#6E4B9E", "Pvalb Gaba" = "#65c294", 
-                 "CLA-EPd-CTX Car3 Glut" = "#AA0DFE", "L2/3 IT RSP Glut" = '#e74c3c', "CA3 Glut" = "#89C75F",
-                 "Ependymal NN"="#A6BDD7","CHOR NN"="#B32851","HPF CR Glut"="#F6768E","CA1-ProS Glut"="#b2d235",
-                 "L5 NP CTX Glut"="#F4C800","SMC NN"="#C06CAB","VLMC NN"="#007947","L4 RSP-ACA Glut"="#8A9FD1","DG-PIR Ex IMN"='#5AC2F1FF',
-                 "L5 IT CTX Glut" = "#FFB300", "L6b CTX Glut" = '#3498db',"Lamp5 Lhx6 Gaba"='#00a6ac',"RHP-COA Ndnf Gaba"="#e4c6d0",
-                 "Sncg Gaba"="#f9906f","Sst Chodl Gaba"="#ffc773","STR D2 Gaba"="#88c4e8","OB-STR-CTX Inh IMN"="#eb7f54")
+    inte.col <- c("other_subclass"='lightgrey',"Joint_cabernet"='lightgrey',"Zhuang"='lightgrey',"Oligo NN" = "#89C75F", "Astro-TE NN" = "#0C727C",
+                               "L2/3 IT CTX Glut" = "#ed1941", "Sst Gaba" = "#2585a6", "L6 IT CTX Glut" = "#89288F",
+                               "OPC NN" = "#F47D2B", "L5 ET CTX Glut" = "#FEE500", "Microglia NN" = "#f26b85",
+                               "Peri NN" = "#90D5E4", "CA2-FC-IG Glut" = "#f173ac", "Lamp5 Gaba" = "#00ae9d",
+                               "Endo NN" = "#1d953f", "DG Glut" = "#FF6800", "L4/5 IT CTX Glut" = "#009ad6",
+                               "Vip Gaba" = "#DEA0FD", "L6 CT CTX Glut" = "#6E4B9E", "Pvalb Gaba" = "#65c294",
+                               "CLA-EPd-CTX Car3 Glut" = "#AA0DFE", "L2/3 IT RSP Glut" = '#e74c3c', "CA3 Glut" = "#00538A",
+                               "Ependymal NN"="#A6BDD7","CHOR NN"="#B32851","HPF CR Glut"="#F6768E","CA1-ProS Glut"="#b2d235",
+                               "L5 NP CTX Glut"="#F4C800","SMC NN"="#C06CAB","VLMC NN"="#007947","L4 RSP-ACA Glut"="#8A9FD1","DG-PIR Ex IMN"='#5AC2F1',
+                               "L5 IT CTX Glut" = "#FFB300", "L6b CTX Glut" = '#3498db',"Lamp5 Lhx6 Gaba"='#057771',"RHP-COA Ndnf Gaba"="#e4c6d0",
+                               "Sncg Gaba"='#915ce5',"Sst Chodl Gaba"="#ffc773","STR D2 Gaba"="#88c4e8","OB-STR-CTX Inh IMN"="#eb7f54")
 
     pic <- DimPlot(merged.seuratobj.sct, group.by = "color_one_subclass",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c(cl,"other_cluster"))
     ggsave(pic,file=paste0(outdir,"/color_one_subclass_plot_",1,"/integration.only_color_",str_replace(cl, "/", " "),".umap_",data,".pdf"),height=13,width=15)
@@ -625,7 +624,7 @@ color_one_subclass_plot <- function(cl, data){
 
 ## run function ##
 for (cl in unique(merged.seuratobj.sct$subclass)){
-    for(data in c("all","Zhuang","Our")){
+    for(data in c("all","Zhuang","Joint_cabernet")){
         color_one_subclass_plot(cl,data)
     }
 }
@@ -640,11 +639,11 @@ color_by_source_plot <- function(type){  ## "neuron_type"
     for (cl in unique(merged.seuratobj.sct@meta.data[,type])){
         merged.seuratobj.sct$color_by_source <- "other_type"
         merged.seuratobj.sct$color_by_source[intersect(which(merged.seuratobj.sct@meta.data[,type] == cl),which(merged.seuratobj.sct$source == "Zhuang"))] <- "Zhuang"
-        merged.seuratobj.sct$color_by_source[intersect(which(merged.seuratobj.sct@meta.data[,type] == cl),which(merged.seuratobj.sct$source == "Our"))] <- "Our"
+        merged.seuratobj.sct$color_by_source[intersect(which(merged.seuratobj.sct@meta.data[,type] == cl),which(merged.seuratobj.sct$source == "Joint_cabernet"))] <- "Joint_cabernet"
         Idents(merged.seuratobj.sct) <- merged.seuratobj.sct$color_by_source
         levels(merged.seuratobj.sct)
-        inte.col <- c("other_type"='lightgrey', "Zhuang"="#415284", "Our"="#EE934E")#"Zhuang"='#3498db',"Our"='#e74c3c')
-        pic <- DimPlot(merged.seuratobj.sct, group.by = "color_by_source",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Our","Zhuang","other_type"))
+        inte.col <- c("other_type"='lightgrey', "Zhuang"="#415284", "Joint_cabernet"="#EE934E")#"Zhuang"='#3498db',"Joint_cabernet"='#e74c3c')
+        pic <- DimPlot(merged.seuratobj.sct, group.by = "color_by_source",cols = inte.col, label=FALSE, pt.size =1.5,seed=1100,label.box=T,label.size = 6,raster=FALSE,order=c("Joint_cabernet","Zhuang","other_type"))
         ggsave(pic,file=paste0(outdir,"/color_by_source_plot_",1,"/integration.only_color_",str_replace(cl, "/", " "),".umap.color_by_source.pdf"),height=13,width=15)
     }
 }

@@ -15,13 +15,11 @@ library(stringr)
 ## 02.01 subset MERFISH data of Zhuang by z with threshold of 7.33 ##
 
 ## rds ##
-#zhuang.obj <- readRDS("/share/analysisdata/Methyl/public/analysis/data/MERFISH/Zhuang_dataset/f9f6cc29-7d06-47be-a798-e4e3b36a86b2.rds")
-zhuang.obj <- readRDS("../input/02-slice/f9f6cc29-7d06-47be-a798-e4e3b36a86b2.rds")
+zhuang.obj <- readRDS("../04.data/03.download_data/Zhuang_raw_counts.rds")
 # downloaded from https://datasets.cellxgene.cziscience.com/f9f6cc29-7d06-47be-a798-e4e3b36a86b2.rds
 
 ## annotation ##
-#anno.df <- read.csv("/share/analysisdata/Methyl/public/analysis/data/MERFISH/Zhuang_dataset/cell_metadata_Zhuang_MERFISH.csv",colClasses = c("character","character","character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","character"))
-anno.df <- read.csv("../input/02-slice/cell_metadata_Zhuang_MERFISH.csv",colClasses = c("character","character","character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","character"))
+anno.df <- read.csv("../04.data/02.metainfo/02.Young_Mouse.Brain_slice/cell_metadata_Zhuang_MERFISH.csv",colClasses = c("character","character","character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","character"))
 idx.v <- intersect(which(anno.df$z > 7.33),which(anno.df$z < 7.34))
 select.v <-  loc[idx.v,'cell_label']
 
@@ -35,5 +33,4 @@ seurat_subset@meta.data$select[c(which(seurat_subset@meta.data$major_brain_regio
 seurat_subset_region <- subset(seurat_subset, select == "Y")
 
 ##### 03.save rds for further analysis #####
-#saveRDS(seurat_subset_region,file="/share/analysisdata/Methyl/public/analysis/data/MERFISH/Zhuang_dataset/subset.z_axis_located_on_7.33.cortex_and_hippo.rds")
-saveRDS(seurat_subset_region,file="../output/02-slice/subset.z_axis_located_on_7.33.cortex_and_hippo.rds")
+saveRDS(seurat_subset_region,file="../output/02.Young_Mouse.Brain_slice/subset.z_axis_located_on_7.33.cortex_and_hippo.rds")

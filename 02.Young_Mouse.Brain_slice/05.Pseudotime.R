@@ -13,15 +13,15 @@ library(monocle)
 
 
 ##### 02.change working path #####
-# setwd("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/MERFISH/20240902")
+setwd("./")
 
 ##### 03.read subclass information #####
-merged.seuratobj.sct <- readRDS("../output/02-slice/map/merged.seuratobj.sct.loci_transfer.the_nearst_1_cell.rds")
+merged.seuratobj.sct <- readRDS("../output/02.Young_Mouse.Brain_slice/map/merged.seuratobj.sct.loci_transfer.the_nearst_1_cell.rds")
 gene.v <- rownames(merged.seuratobj.sct@assays$RNA$counts)
 metainfo = merged.seuratobj.sct@meta.data
 
 ##### 04.monocle analysis process #####
-load("../output/02-slice/RNA_DNA_fill_na.20240925.RData")
+load("../output/02.Young_Mouse.Brain_slice/RNA_DNA_fill_na.20240925.RData")
 ## pretreatment ##
 RNA_fill.obj <- CreateSeuratObject(RNA_fill)
 RNA_fill.obj <- NormalizeData(RNA_fill.obj, verbose = FALSE)
@@ -115,10 +115,10 @@ Pseudotime_gene.df <- subclass.df[rownames(diff_test[which(diff_test$use_for_ord
 Pseudotime_gene.df = Pseudotime_gene.df[,c("L2/3 IT CTX Glut","L4/5 IT CTX Glut","L5 IT CTX Glut","L6 IT CTX Glut")]
 IT_sort_decreasing.df <- Pseudotime_gene.df[Pseudotime_gene.df[,1] < Pseudotime_gene.df[,2] & Pseudotime_gene.df[,2] < Pseudotime_gene.df[,3] & Pseudotime_gene.df[,3] < Pseudotime_gene.df[,4],]                   
 IT_sort_increasing.df <- Pseudotime_gene.df[Pseudotime_gene.df[,1] > Pseudotime_gene.df[,2] & Pseudotime_gene.df[,2] > Pseudotime_gene.df[,3] & Pseudotime_gene.df[,3] > Pseudotime_gene.df[,4],]
-save(IT_sort_decreasing.df,IT_sort_increasing.df,file="../output/02-slice/pseudotime/IT_pseudotime_genes.RData")
+save(IT_sort_decreasing.df,IT_sort_increasing.df,file="../output/02.Young_Mouse.Brain_slice/pseudotime/IT_pseudotime_genes.RData")
 
 # run the following lines if CA Glut was analysised
 # CA_sort_decreasing.df <- Pseudotime_gene.df[Pseudotime_gene.df[,1] < Pseudotime_gene.df[,2] & Pseudotime_gene.df[,2] < Pseudotime_gene.df[,3],]
 # CA_sort_increasing.df <- Pseudotime_gene.df[Pseudotime_gene.df[,1] > Pseudotime_gene.df[,2] & Pseudotime_gene.df[,2] > Pseudotime_gene.df[,3],]
 # order_Pseudotime_gene.df <- Pseudotime_gene.df[order(Pseudotime_gene.df [,1]),]
-# save(CA_sort_increasing.df,CA_sort_decreasing.df,file="../output/02-slice/pseudotime/CA_pseudotime_genes.RData")
+# save(CA_sort_increasing.df,CA_sort_decreasing.df,file="../output/02.Young_Mouse.Brain_slice/pseudotime/CA_pseudotime_genes.RData")

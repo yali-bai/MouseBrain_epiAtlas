@@ -1,4 +1,3 @@
-#########    All "our" in the following code refers to Joint Cabernet.
 ##### 01.import packages #####
 library(Seurat)
 now_lib <- .libPaths()
@@ -24,27 +23,24 @@ library(cowplot)
 library(data.table) 
 
 ##### 02.change working path #####
-# setwd("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/MERFISH/20240902")
+setwd("./")
 
 ##### 03.load data after filling na #####
 #load("RNA_DNA_fill_na.20240925.RData")
-load("../output/02-slice/RNA_DNA_fill_na.20240925.RData")
+load("../output/02.Young_Mouse.Brain_slice/RNA_DNA_fill_na.20240925.RData")
 
 ##### 04.data prepare #####
 ## subclass order ##
-#subclass_order.df = read.csv("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/sample_info/04_order_for_class_subclass/subclass_order_for_integration_with_zhuang.txt",header=F)
-subclass_order.df = read.csv("../input/02-slice/subclass_order_for_integration_with_zhuang.txt",header=F)
+subclass_order.df = read.csv("../04.data/04.config_files/subclass_order_for_integration_with_zhuang.txt",header=F)
 order.v = subclass_order.df$V1
 ## paired information of RNA and DNA sample id ##
-#paired_sampleinfo = read.csv("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/sample_info/01_Sampleinfo/RNA_DNA_match_name_QC_MERFISH.csv",header=T)
-paired_sampleinfo = read.csv("../input/02-slice/RNA_DNA_match_name_QC_MERFISH.csv",header=T)
+paired_sampleinfo = read.csv("../04.data/02.metainfo/02.Young_Mouse.Brain_slice/RNA_DNA_match_name_QC_Joint_Cabernet_brain_slice.csv",header=T)
 ## loci and subclass information ##
 #merged.seuratobj.sct <- readRDS("merged.seuratobj.sct.loci_transfer.the_nearst_1_cell.rds")
-merged.seuratobj.sct <- readRDS("../output/02-slice/map/merged.seuratobj.sct.loci_transfer.the_nearst_1_cell.rds")
+merged.seuratobj.sct <- readRDS("../output/02.Young_Mouse.Brain_slice/map/merged.seuratobj.sct.loci_transfer.the_nearst_1_cell.rds")
 metainfo = merged.seuratobj.sct@meta.data
 ## Zhuang MERFISH metainfo ##
-#loc.df <- read.csv("/share/analysisdata/Methyl/public/analysis/data/MERFISH/Zhuang_dataset/cell_metadata_Zhuang_MERFISH.csv",colClasses = c("character","character","character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","character"))
-loc.df <- read.csv("../input/02-slice/cell_metadata_Zhuang_MERFISH.csv",colClasses = c("character","character","character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","character"))
+loc.df <- read.csv("../04.data/03.download_data/cell_metadata_Zhuang_MERFISH.csv",colClasses = c("character","character","character","character","character","character","character","numeric","numeric","numeric","numeric","numeric","character"))
 rownames(loc.df) <- loc.df$cell_label
 TSNE_RNA <- data.frame(Embeddings(merged.seuratobj.sct, reduction = 'tsne')[Cells(merged.seuratobj.sct),])  # extract tsne loci for substitution
 spatial_zhuang_merfish_loci.df <- as.data.frame(TSNE_RNA[which(is.na(str_match(rownames(TSNE_RNA),"Mouses"))),])
@@ -118,7 +114,7 @@ spatial_zhuang_merfish_loci.df$umap_2 = spatial_zhuang_merfish_loci.df$spatial_2
 limits_marker_RNA_cluster_plot_neuron_type <- function(marker_type, type, feature, cl, gene, pos_neg,max_vector){
                 if(cl == "L2/3 IT CTX Glut"){
                     ## define color ##
-                    inte.col <- c("Our"='lightgrey',"Zhuang"='lightgrey',"Oligo NN" = 'lightgrey', "Astro-TE NN" = 'lightgrey',
+                    inte.col <- c("Joint_cabernet"='lightgrey',"Zhuang"='lightgrey',"Oligo NN" = 'lightgrey', "Astro-TE NN" = 'lightgrey',
                         "L2/3 IT CTX Glut" = "#ed1941", "Sst Gaba" = 'lightgrey', "L6 IT CTX Glut" = "#89288F", 
                         "OPC NN" = 'lightgrey', "L5 ET CTX Glut" = 'lightgrey', "Microglia NN" = 'lightgrey',  
                         "Peri NN" = 'lightgrey', "CA2-FC-IG Glut" = 'lightgrey', "Lamp5 Gaba" = 'lightgrey', 
@@ -151,7 +147,7 @@ limits_marker_RNA_cluster_plot_neuron_type <- function(marker_type, type, featur
                     cell_n.v <-c(cell_n.v,rownames(merged.seuratobj.sct@meta.data[which(merged.seuratobj.sct@meta.data$subclass == "L6 IT CTX Glut"),]))
                 }else{
                     ## define color ##
-                    inte.col <- c("Our"='lightgrey',"Zhuang"='lightgrey',"Oligo NN" = 'lightgrey', "Astro-TE NN" = 'lightgrey',
+                    inte.col <- c("Joint_cabernet"='lightgrey',"Zhuang"='lightgrey',"Oligo NN" = 'lightgrey', "Astro-TE NN" = 'lightgrey',
                         "L2/3 IT CTX Glut" = 'lightgrey', "Sst Gaba" = 'lightgrey', "L6 IT CTX Glut" = 'lightgrey', 
                         "OPC NN" = 'lightgrey', "L5 ET CTX Glut" = 'lightgrey', "Microglia NN" = 'lightgrey',  
                         "Peri NN" = 'lightgrey', "CA2-FC-IG Glut" = "#f173ac", "Lamp5 Gaba" = 'lightgrey', 
@@ -303,6 +299,6 @@ limits_marker_RNA_cluster_plot_neuron_type <- function(marker_type, type, featur
 
 ## run function ##
 plot <- limits_marker_RNA_cluster_plot_neuron_type("RNA","subclass","genebody","L2/3 IT CTX Glut","ENSMUSG00000001985.9","positive",c(0,2,0.5,4.5,0.35,0.65,0.25,0.4,0.5,0.9,0.01,0.04,0.005,0.01,0.025,0.04))
-pdf("../output/02-slice/pseudotime/IT_Glut.ENSMUSG00000001985.9.genebody.pdf",width = 50,height = 40)
+pdf("../output/02.Young_Mouse.Brain_slice/pseudotime/IT_Glut.ENSMUSG00000001985.9.genebody.pdf",width = 50,height = 40)
 print(plot)
 dev.off()

@@ -1,4 +1,3 @@
-#########    All "our" in the following code refers to Joint Cabernet.
 ##### 01.import packages #####
 library(Seurat)
 now_lib <- .libPaths()
@@ -11,25 +10,21 @@ library(stringr)
 
 ##### 02.data prepare ##### 
 ##### split Joint-Cabernet slice data into three class by Exc, Inh, Non and determine cell group
-## read rds of seurat object of integration of Joint-Cabernet young mice RNA and Zeng 10x RNA
-#integrated.obj = readRDS("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/selected_region/our_RNA_label_V2.rds")
-integrated.obj = readRDS("../input/02-slice/our_RNA_label_V2.rds")
-exc.idx = rownames(integrated.obj[which(!is.na(str_match(integrated.obj$subclass_label,"Glut"))),])
-inh.idx = rownames(integrated.obj[which(!is.na(str_match(integrated.obj$subclass_label,"Gaba"))),])
-inh.idx = c(inh.idx, rownames(integrated.obj[which(!is.na(str_match(integrated.obj$subclass_label,"OB-STR-CTX Inh IMN"))),])) #https://knowledge.brain-map.org/data/5C0201JSVE04WY6DMVC/explore
-non.idx = setdiff(rownames(integrated.obj),c(exc.idx,inh.idx))
+## read three class label of Joint-Cabernet young mice RNA and Zeng 10x RNA
+integrated.obj = fread("../04.data/02.metainfo/01.Young_Mouse/TSO-joint.RNA_QC_stat.young.csv",header=T,data.table=F)
+exc.idx = integrated.obj[which(integrated.obj$three_class_label == "Exc"),"SampleID"] # All SampleIDs in exc.idx have passed RNA QC
+inh.idx = integrated.obj[which(integrated.obj$three_class_label == "Inh"),"SampleID"]
+non.idx = integrated.obj[which(integrated.obj$three_class_label == "Non"),"SampleID"]
 
-#our_RNA.df <- readRDS("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/MERFISH/20240813/RNA_V1/MERFISH_raw_count.without_QC_filter.rds") # The QC was filtered before integration with Zeng 10x RNA
-our_RNA.df <- readRDS("../input/02-slice/MERFISH_raw_count.without_QC_filter.rds")
-rownames(our_RNA.df) <- unlist(lapply(rownames(our_RNA.df), function(x) strsplit(x,"\\.")[[1]][1]))
+Joint_Cabernet_RNA.df <- readRDS("../04.data/02.metainfo/02.Young_Mouse.Brain_slice/Joint_Cabernet_brain_slice_raw_count.without_QC_filter.rds")
+rownames(Joint_Cabernet_RNA.df) <- unlist(lapply(rownames(Joint_Cabernet_RNA.df), function(x) strsplit(x,"\\.")[[1]][1]))
 
-our_exc.df = our_RNA.df[,intersect(unlist(lapply(exc.idx, function(x) strsplit(x,"@@_")[[1]][2])),colnames(our_RNA.df))]
-our_inh.df = our_RNA.df[,intersect(unlist(lapply(inh.idx, function(x) strsplit(x,"@@_")[[1]][2])),colnames(our_RNA.df))]
-our_non.df = our_RNA.df[,intersect(unlist(lapply(non.idx, function(x) strsplit(x,"@@_")[[1]][2])),colnames(our_RNA.df))]
+Joint_Cabernet_exc.df = Joint_Cabernet_RNA.df[,intersect(exc.idx,colnames(Joint_Cabernet_RNA.df)]
+Joint_Cabernet_inh.df = Joint_Cabernet_RNA.df[,intersect(inh.idx,colnames(Joint_Cabernet_RNA.df)]
+Joint_Cabernet_non.df = Joint_Cabernet_RNA.df[,intersect(non.idx,colnames(Joint_Cabernet_RNA.df)]
 
 ##### split subseted zhuang MERFISH data into three class by Exc, Inh, Non in the same way
-#seurat_subset_region <- readRDS("/share/analysisdata/Methyl/public/analysis/data/MERFISH/Zhuang_dataset/subset.z_axis_located_on_7.33.cortex_and_hippo.rds")
-seurat_subset_region <- readRDS("../output/02-slice/subset.z_axis_located_on_7.33.cortex_and_hippo.rds")
+seurat_subset_region <- readRDS("../04.data/02.metainfo/02.Young_Mouse.Brain_slice/subset.z_axis_located_on_7.33.cortex_and_hippo.rds")
 zhuang.df <- as.matrix(seurat_subset_region@assays$RNA@counts)
 exc.idx = rownames(seurat_subset_region@meta.data[which(!is.na(str_match(seurat_subset_region$subclass_transfer,"Glut"))),])
 exc.idx = c(exc.idx,rownames(seurat_subset_region@meta.data[which(!is.na(str_match(seurat_subset_region$subclass_transfer,"DG-PIR Ex IMN"))),]))
@@ -41,18 +36,18 @@ zhuang_inh.df = zhuang.df[,intersect(inh.idx,colnames(zhuang.df))]
 zhuang_non.df = zhuang.df[,intersect(non.idx,colnames(zhuang.df))]
 
 ##### 03. integration #####
-common_gene <- intersect(rownames(seurat_subset_region@assays$RNA@counts),rownames(our_RNA.df))
+common_gene <- intersect(rownames(seurat_subset_region@assays$RNA@counts),rownames(Joint_Cabernet_RNA.df))
 
 ## define integration function ##
-integrate = function(our_matrix,zhuang_matrix,common_gene){
+integrate = function(Joint_Cabernet_matrix,zhuang_matrix,common_gene){
     ## subset matrix with common genes ##
-    our_matrix = our_matrix[common_gene,]
+    Joint_Cabernet_matrix = Joint_Cabernet_matrix[common_gene,]
     zhuang_matrix = zhuang_matrix[common_gene,]
 
     ## merge matrix and start integration ##
-    merged.df <- cbind(zhuang_matrix,our_matrix)
+    merged.df <- cbind(zhuang_matrix,Joint_Cabernet_matrix)
     merged.seuratobj <- CreateSeuratObject(merged.df)
-    merged.seuratobj$source <- c(rep("Zhuang",dim(zhuang_matrix)[2]),rep("Our",dim(our_matrix)[2])) # define data source
+    merged.seuratobj$source <- c(rep("Zhuang",dim(zhuang_matrix)[2]),rep("Joint_cabernet",dim(Joint_Cabernet_matrix)[2])) # define data source
 
     ## step 1. determine integration features ##
     merged.seuratobj.list <- SplitObject(merged.seuratobj, split.by = "source")
@@ -160,11 +155,11 @@ integrate = function(our_matrix,zhuang_matrix,common_gene){
 }
 
 ##### 04. run integration respectively #####
-exc.obj = integrate(our_exc.df,zhuang_exc.df,common_gene)
-inh.obj = integrate(our_inh.df,zhuang_inh.df,common_gene)
-non.obj = integrate(our_non.df,zhuang_non.df,common_gene)
+exc.obj = integrate(Joint_Cabernet_exc.df,zhuang_exc.df,common_gene)
+inh.obj = integrate(Joint_Cabernet_inh.df,zhuang_inh.df,common_gene)
+non.obj = integrate(Joint_Cabernet_non.df,zhuang_non.df,common_gene)
 
 ##### 05. save result #####
-saveRDS(exc.obj,file="../output/02-slice/integration/exc_obj.label_transfer_twice.rds")
-saveRDS(inh.obj,file="../output/02-slice/integration/inh_obj.label_transfer_twice.rds")
-saveRDS(non.obj,file=".../output/02-slice/integration/non_obj.label_transfer_twice.rds")
+saveRDS(exc.obj,file="../output/02.Young_Mouse.Brain_slice/integration/exc_obj.label_transfer_twice.rds")
+saveRDS(inh.obj,file="../output/02.Young_Mouse.Brain_slice/integration/inh_obj.label_transfer_twice.rds")
+saveRDS(non.obj,file=".../output/02.Young_Mouse.Brain_slice/integration/non_obj.label_transfer_twice.rds")
