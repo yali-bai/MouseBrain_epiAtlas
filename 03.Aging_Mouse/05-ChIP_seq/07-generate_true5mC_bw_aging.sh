@@ -7,7 +7,7 @@
 indir_5hmC="${indir}/subclass/5hmC/CG"
 indir_5mC="${indir}/subclass/5mC/CG"
 outdir="${your_outdir}/subclass/true5mC/CG"
-chrom_size="../../input/reference_genome/mm10.chrom.sizes.txt"
+chrom_size="../../04.data/01.ref/mm10.chrom.sizes.txt"
 
 mkdir -p ${outdir}/logs
 

@@ -5,7 +5,7 @@ indir=""
 outdir=""
 function run_allc2bw {
 
-chrom_size=../../input/reference_genome/mm10.chrom.sizes.nochrM.txt
+chrom_size=../../04.data/01.ref/mm10.chrom.sizes.nochrM.txt
 
 ls $indir | grep ".Merge.allc.tsv.gz$" | sed 's/5mC_//g' | sed 's/.Merge.allc.tsv.gz$//g' | while read ff
 do 

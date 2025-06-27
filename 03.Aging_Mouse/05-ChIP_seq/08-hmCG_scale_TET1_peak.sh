@@ -12,7 +12,7 @@ age=$2
 
 cpus=10
 
-bed_file="../../output/03-aging/05-ChIP-seq/01-TET1_5D6_rep1_filter.bed"
+bed_file="../../output/03.Aging_Mouse/05-ChIP-seq/01-TET1_5D6_rep1_filter.bed"
 
 outdir="${your_outdir}/08_hmCG_TET1_peak/"
 
