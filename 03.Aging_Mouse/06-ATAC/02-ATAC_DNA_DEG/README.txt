@@ -1,4 +1,0 @@
-00-ATAC_peak_slop3kb: Primarily expands the cell type-specific CREs of ATAC by 3000 bp on each side from the center point.
-02-plot_boxplot_5hmC_total5mC: This script is used to plot box plots of the differences in DNA methylation ratios (5hmC, total5mC) between aging and young mice in DEG-related CRE regions across different subclasses.
-02-plot_boxplot_true5mC: This script is used to plot box plots of the differences in DNA methylation (true5mC) ratios between aging and young mice in DEG-related CRE regions across different subclasses.
-The shell scripts from 01 (including cmd or scale) are used to generate DNA methylation ratio for specified bed intervals.
