@@ -1,5 +1,5 @@
 function run_merge {
-indir=../../output/03-aging/02-merge_allc
+indir=../../output/03.Aging_Mouse/02-merge_allc
 outdir=""
 
 ls  $indir|grep txt|sed 's/.txt//g' |while read ff  
@@ -19,7 +19,7 @@ set -x
 allcools merge-allc  \
 	--allc_paths $indir/${ff}.txt \
 	--output_path ${outdir}/merge_allc/${ff}.Merge.allc.tsv.gz \
-	--chrom_size_path ../../input/reference_genome/mm10.chrom.sizes.nochrM.txt \
+	--chrom_size_path ../../04.data/01.ref/mm10.chrom.sizes.nochrM.txt \
 	--cpu 50 \
 	--bin_length 10000000 
 

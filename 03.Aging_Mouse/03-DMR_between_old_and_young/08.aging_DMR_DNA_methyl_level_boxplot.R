@@ -20,14 +20,12 @@ library(ggunchained)
 # outdir=""
 
 ##### 02.set working path #####
-# setwd("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/20241011_integration_by_subclass_marker/DMR/run_mcds.by_3cpg_segment_cell.all_age.20250115/05.significant_DMR_DHMR_mcds/20250217_update.filter_before_calculating_p_value_adjust")
+# setwd("./")
 
 ##### 03.read significant DMRs DHMRs info in #####
 ## segment and subclass information ##
-#DMR_result.sig = readRDS("../../04.DMR_DHMR_calculate_and_filter/20250217_update.filter_before_calculating_p_value_adjust/DMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
-#DHMR_result.sig=readRDS("../../04.DMR_DHMR_calculate_and_filter/20250217_update.filter_before_calculating_p_value_adjust/DHMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
-DMR_result.sig = readRDS("../../output/03-aging/03-DMRs_DHMRs/DMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
-DHMR_result.sig=readRDS("../../output/03-aging/03-DMRs_DHMRs/DHMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
+DMR_result.sig = readRDS("../../output/03.Aging_Mouse/03-DMRs_DHMRs/DMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
+DHMR_result.sig=readRDS("../../output/03.Aging_Mouse/03-DMRs_DHMRs/DHMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
 
 ## subclass mean 5hmCG of all segments ##
 hmC_methy = fread(paste0(indir,"/aging_DMR_DHMR_5hmCG_mean_methy_level_of_subclass_diff_age.csv"),data.table=F,header=T,drop=1)
@@ -65,8 +63,7 @@ saveRDS(merge.df.dcast,file=paste0(outdir,"/merge.df.dcast.rds"))
 
 
 ## subclass order ##
-#subclass_order = readRDS("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/20241011_integration_by_subclass_marker/order.subclass.rds")
-subclass_order = readRDS("../../input/03-aging/order.subclass.rds")
+subclass_order = readRDS("../../04.data/04.config_files/order.subclass.rds")
 
 ## hyper DMRs ## 
 ## generate data for boxplot ##
@@ -100,7 +97,7 @@ p1<-ggplot(DMR_plot.df,aes(x=subclass,y=diff,fill=type))+
             axis.title.x = element_blank(),
             axis.title.y = element_text(face="bold", size=10))+
     scale_y_continuous(labels = function(x) sprintf("%.2f", x))
-pdf("../../output/03-aging/03-DMRs_DHMRs/significant_DMRs_DHMRs_boxplot/aging_hyper_DMR_DNA_methyl_level_boxplot.pdf",width=12,height=3)   
+pdf("../../output/03.Aging_Mouse/03-DMRs_DHMRs/significant_DMRs_DHMRs_boxplot/aging_hyper_DMR_DNA_methyl_level_boxplot.pdf",width=12,height=3)   
 print(p1)
 dev.off()
 
@@ -136,7 +133,7 @@ p1<-ggplot(DMR_plot.df,aes(x=subclass,y=diff,fill=type))+
             axis.title.x = element_blank(),
             axis.title.y = element_text(face="bold", size=10))+
     scale_y_continuous(labels = function(x) sprintf("%.2f", x))
-pdf("../../output/03-aging/03-DMRs_DHMRs/significant_DMRs_DHMRs_boxplot/aging_hypo_DMR_DNA_methyl_level_boxplot.pdf",width=10,height=3)   
+pdf("../../output/03.Aging_Mouse/03-DMRs_DHMRs/significant_DMRs_DHMRs_boxplot/aging_hypo_DMR_DNA_methyl_level_boxplot.pdf",width=10,height=3)   
 print(p1)
 dev.off()
 
@@ -172,7 +169,7 @@ p1<-ggplot(DHMR_plot.df,aes(x=subclass,y=diff,fill=type))+
             axis.title.x = element_blank(),
             axis.title.y = element_text(face="bold", size=10))+
     scale_y_continuous(labels = function(x) sprintf("%.2f", x))
-pdf("../../output/03-aging/03-DMRs_DHMRs/significant_DMRs_DHMRs_boxplot/aging_hyper_DHMR_DNA_methyl_level_boxplot.pdf",width=12,height=3)   
+pdf("../../output/03.Aging_Mouse/03-DMRs_DHMRs/significant_DMRs_DHMRs_boxplot/aging_hyper_DHMR_DNA_methyl_level_boxplot.pdf",width=12,height=3)   
 print(p1)
 dev.off()
 
@@ -208,6 +205,6 @@ p1<-ggplot(DHMR_plot.df,aes(x=subclass,y=diff,fill=type))+
             axis.title.x = element_blank(),
             axis.title.y = element_text(face="bold", size=10))+
     scale_y_continuous(labels = function(x) sprintf("%.2f", x))
-pdf("../../output/03-aging/03-DMRs_DHMRs/significant_DMRs_DHMRs_boxplot/aging_hypo_DHMR_DNA_methyl_level_boxplot.pdf",width=12,height=3)
+pdf("../../output/03.Aging_Mouse/03-DMRs_DHMRs/significant_DMRs_DHMRs_boxplot/aging_hypo_DHMR_DNA_methyl_level_boxplot.pdf",width=12,height=3)
 print(p1)
 dev.off()

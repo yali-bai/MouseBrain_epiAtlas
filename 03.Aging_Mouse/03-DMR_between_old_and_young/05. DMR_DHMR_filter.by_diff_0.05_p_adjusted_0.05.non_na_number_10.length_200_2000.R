@@ -7,7 +7,7 @@ library(stringr)
 # outdir=""
 
 ##### 02.set working path #####
-# setwd("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/20241011_integration_by_subclass_marker/DMR/run_mcds.by_3cpg_segment_cell.all_age.20250115/04.DMR_DHMR_calculate_and_filter/20250217_update.filter_before_calculating_p_value_adjust")
+# setwd("./")
 
 ##### 03.filter DMRs #####
 result = fread(paste0(indir,"/DMR.statistic.csv"),data.table=F,header=T)
@@ -38,7 +38,7 @@ dim(result.sig)[1]
 table(result.sig$cluster)
 
 ## save result ##
-saveRDS(result.sig,file="../../output/03-aging/03-DMRs_DHMRs/DMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
+saveRDS(result.sig,file="../../output/03.Aging_Mouse/03-DMRs_DHMRs/DMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
 
 ## hyper DMRs ##
 up_DMR = subset(result.sig, diff > 0.05 & young_number >= 10 & old_number >= 10 & mannwhitneyu_p_adj < 0.05 & length >= 200)
@@ -85,22 +85,22 @@ dim(result.sig)[1]
 table(result.sig$cluster)
 
 ## save result ##
-saveRDS(result.sig,file="../../output/03-aging/03-DMRs_DHMRs/DHMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
+saveRDS(result.sig,file="../../output/03.Aging_Mouse/03-DMRs_DHMRs/DHMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
 
 ## hyper DHMRs ##
 up_DHMR = subset(result.sig, diff > 0.05 & young_number >= 10 & old_number >= 10 & mannwhitneyu_p_adj < 0.05 & length >= 200)
 up_DHMR_bed = data.frame(unlist(lapply(as.character(up_DHMR$chrom), function(x) strsplit(x,'_')[[1]][1])),unlist(lapply(as.character(up_DHMR$chrom), function(x) strsplit(x,'_')[[1]][2])),unlist(lapply(as.character(up_DHMR$chrom), function(x) strsplit(x,'_')[[1]][3])))
-write.table(up_DHMR_bed,file=paste0("../../output/03-aging/03-DMRs_DHMRs/DHMR_upregulated_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.bed"),sep="\t",row.names=F,col.names=F,quote=F)
+write.table(up_DHMR_bed,file=paste0("../../output/03.Aging_Mouse/03-DMRs_DHMRs/DHMR_upregulated_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.bed"),sep="\t",row.names=F,col.names=F,quote=F)
 
 ## hypo DHMRs ##
 down_DHMR = subset(result.sig, diff < -0.05 & young_number >= 10 & old_number >= 10 & mannwhitneyu_p_adj < 0.05 & length >= 200)
 down_DHMR_bed = data.frame(unlist(lapply(as.character(down_DHMR$chrom), function(x) strsplit(x,'_')[[1]][1])),unlist(lapply(as.character(down_DHMR$chrom), function(x) strsplit(x,'_')[[1]][2])),unlist(lapply(as.character(down_DHMR$chrom), function(x) strsplit(x,'_')[[1]][3])))
-write.table(down_DHMR_bed,file=paste0("../../output/03-aging/03-DMRs_DHMRs/DHMR_downregulated_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.bed"),sep="\t",row.names=F,col.names=F,quote=F)
+write.table(down_DHMR_bed,file=paste0("../../output/03.Aging_Mouse/03-DMRs_DHMRs/DHMR_downregulated_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.bed"),sep="\t",row.names=F,col.names=F,quote=F)
 
 ## output all DHMRs: 1 means hyper, and 0 means hypo ##
 DHMR_subset = result.sig[,c("cluster","chrom","diff")]
 DHMR_subset$hyper_hypo = 0
 DHMR_subset$hyper_hypo[which(DHMR_subset$diff > 0)] = 1
-write.csv(DHMR_subset,file="../../output/03-aging/03-DMRs_DHMRs/DHMR.subclass_diff_hyper_hypo_info.csv",quote=F,row.names=F,col.names=T)
+write.csv(DHMR_subset,file="../../output/03.Aging_Mouse/03-DMRs_DHMRs/DHMR.subclass_diff_hyper_hypo_info.csv",quote=F,row.names=F,col.names=T)
 
 

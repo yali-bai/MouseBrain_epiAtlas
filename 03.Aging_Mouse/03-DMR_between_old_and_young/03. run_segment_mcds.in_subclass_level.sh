@@ -25,11 +25,11 @@ set -x
 allcools generate-dataset  \
 	--allc_table ${allc_path} \
 	--output_path ${outdir}/TSO-joint-RNA_Mouse_${modification}_all_cells.${start}_${end}.mcds \
-	--chrom_size_path ../../input/reference_genome/mm10.chrom.sizes.nochrM.txt \
+	--chrom_size_path ../../04.data/01.ref/mm10.chrom.sizes.nochrM.txt \
 	--obs_dim cell  \
 	--cpu 60 \
 	--chunk_size 50 \
-	--region segment ../../output/03-aging/03-DMRs_DHMRs/segments/tso.${modification}.segment.3cpg.0_base.bed  \
+	--region segment ../../output/03.Aging_Mouse/03-DMRs_DHMRs/segments/tso.${modification}.segment.3cpg.0_base.bed  \
 	--quantifiers segment count CGN
 
 set +x
