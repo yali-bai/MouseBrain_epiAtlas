@@ -26,13 +26,11 @@ library(ggunchained)
 # setwd(paste0(outdir,"")
 
 ##### 03.read subclass order file #####
-#subclass_order = readRDS("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/20241011_integration_by_subclass_marker/order.subclass.rds")
-subclass_order = readRDS("../../../input/03-aging/order.subclass.rds")
+subclass_order = readRDS("../../../04.data/04.config_files/order.subclass.rds")
 
 ##### 04.get top hyper DHMRs position #####
 ## read significant DHMRs file in ##
-#DHMR_result=readRDS("../../../04.DMR_DHMR_calculate_and_filter/20250217_update.filter_before_calculating_p_value_adjust/DHMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
-DHMR_result=readRDS("../../../output/03-aging/03-DMRs_DHMRs/DHMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
+DHMR_result=readRDS("../../../output/03.Aging_Mouse/03-DMRs_DHMRs/DHMR_significant_in_old.diff_0.05_p_adjusted_0.05.non_na_number_10.length_200_2000.rds")
 head(DHMR_result)
 
 ## select hyper DHMRs ##
@@ -173,9 +171,9 @@ for(cl in unique(DHMR_result.sig.sorted$three_class)){
 }
 
 ## generate mm10 gene bed ##
-gene.df = read.table("../../../input/mm10.genes_duplicated.bed",sep = "\t",header=T)
+gene.df = read.table("../../../04.data/01.ref/mm10.genes_duplicated.bed",sep = "\t",header=T)
 head(gene.df)
-write.table(gene.df[,1:4],file="../../../output/03-aging/mm10_gene.bed",quote=F,col.names=F,row.names=F,sep="\t")
+write.table(gene.df[,1:4],file="../../../output/03.Aging_Mouse/mm10_gene.bed",quote=F,col.names=F,row.names=F,sep="\t")
 
 ## top500 hyper DHMRs position of all subclassed of each three class ##
 if (!dir.exists(paste0(outdir,"/three_class/top500"))) {  

@@ -24,7 +24,7 @@ sbatch <<RUN
 
 set -x
 
-bedtools intersect -a $file -b ../../../output/03-aging/mm10_gene.bed -wb >${file}.intersect_gene.bed
+bedtools intersect -a $file -b ../../../output/03.Aging_Mouse/mm10_gene.bed -wb >${file}.intersect_gene.bed
 
 set +x
 RUN
