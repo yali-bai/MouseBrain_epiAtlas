@@ -15,16 +15,15 @@ import anndata
 # outdir=""
 
 ##### 02.set working path #####
-# os.chdir("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/20241011_integration_by_subclass_marker/DMR/run_mcds.by_3cpg_segment_cell.all_age.20250115/03.segment_mcds")
+os.chdir("./")
 
 ##### 03.5mCG_5hmCG #####
 ## read QC files in ##
-old_celldata = pd.read_csv("../../input/03-aging/TSO-joint.DNA_QC_stat.old_mouse.csv",low_memory=False)
-young_celldata = pd.read_csv("../../input/01-youth/TSO-joint.DNA_QC_stat.younger_than_P70.csv",low_memory=False)
+old_celldata = pd.read_csv("../../../04.data/02.metainfo/03.Aging_Mouse/TSO-joint.mC_QC_stat.aged.csv",low_memory=False)
 
 ## QC and change sampleid ##
-old_array = ('allc_'+old_celldata[(old_celldata['Datatype']=='5mC') & (old_celldata['QC'] == 1)]['SampleID']+'.mm10.dna.tsv.gz')
-young_array = np.array('allc_'+young_celldata[(young_celldata['Library']=='mC') & (young_celldata['QC'] == 1)]['SampleID'])
+old_array = ('allc_'+old_celldata[(old_celldata['Library']=='mC') & (old_celldata['QC'] == 1) & (old_celldata['age'] == "old")]['SampleID']+'.mm10.dna.tsv.gz')
+young_array = np.array('allc_'+old_celldata[(old_celldata['Library']=='mC') & (old_celldata['QC'] == 1) & (old_celldata['age'] == "young")]['SampleID'])
 QC_cells = np.append(old_array, young_array)
 
 var_dim = 'segment'

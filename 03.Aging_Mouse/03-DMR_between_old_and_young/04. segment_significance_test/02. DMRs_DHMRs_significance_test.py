@@ -15,7 +15,7 @@ import numpy as np
 # outdir=""
 
 ##### 02.set working path #####
-# os.chdir("/share/analysisdata/Methyl/workflow/TSO_HT/Datadir/Mouse_Brain/data/RNA/integration/all_age/20241011_integration_by_subclass_marker/DMR/run_mcds.by_3cpg_segment_cell.all_age.20250115/04.DMR_DHMR_calculate_and_filter/old_h5ad")
+os.chdir("./")
 
 ##### 03.define function of permutation_test #####
 def permutation_test(data1, data2, num_permutations=1000, statistic=np.mean):
@@ -46,14 +46,14 @@ def permutation_test(data1, data2, num_permutations=1000, statistic=np.mean):
 
 ##### 03.define function of significance test #####
 def DMR_diff_compute(datatype,chr_number,n1,n2):
-    info=pd.read_csv("../../../output/03-aging/mouse_young_and_old.metainfo.csv",low_memory=False)
-    info['subclass'] = info['lt_twice_subclass']
+    info=pd.read_csv("../../../04.data/02.metainfo/03.Aging_Mouse/RNA_DNA_match_name_QC.aged.csv",low_memory=False)
+    info['subclass'] = info['subclass_label']
     mc=anndata.read_h5ad(f"{indir}/{datatype}_frac_segment_by_cell_chr{chr_number}.h5ad").to_df()
     info=info[info["total_QC"]==1]
     if datatype == "5mCG":
-        info.index='allc_'+info['mC']
+        info.index='allc_'+info['mC_ID']
     else:
-        info.index='allc_'+info['hmC']
+        info.index='allc_'+info['hmC_ID']
 
     gene_results_all = pd.DataFrame()
     n1=int(n1)
@@ -61,8 +61,8 @@ def DMR_diff_compute(datatype,chr_number,n1,n2):
     for nrow in range(n1-1,n2):   #0-base
         for cl in info['subclass'].unique():
             print(f"{nrow}-{cl}")
-            y_cells=info.index[(info['age'] == 'young') & (info['subclass'] == cl)] # index of cells with candidate subclass and young age
-            o_cells=info.index[(info['age'] == 'old') & (info['subclass'] == cl)] # index of cells with candidate subclass and old age
+            y_cells=info.index[(info['old_young'] == 'young') & (info['subclass'] == cl)] # index of cells with candidate subclass and young age
+            o_cells=info.index[(info['old_young'] == 'old') & (info['subclass'] == cl)] # index of cells with candidate subclass and old age
             gene=mc.columns[nrow] # candidate segment
             y_values = mc.loc[mc.index.isin(y_cells),gene] # young cellnames 
             o_values = mc.loc[mc.index.isin(o_cells +".mm10.dna.tsv.gz"),gene] # old cellnames 

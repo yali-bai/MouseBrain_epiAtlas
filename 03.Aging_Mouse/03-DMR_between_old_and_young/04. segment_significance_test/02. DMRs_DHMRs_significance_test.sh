@@ -34,7 +34,7 @@ set +x
 RUN
 
 done
-done < ../../../input/03-aging/subclass_${datatype}_chr_number.txt
+done < ../../../04.data/05.intermediate_files/02.DNA/02.Aging_Mouse/subclass_${datatype}_chr_number.txt
 done
 
 
