@@ -9,7 +9,7 @@ library(dplyr)
 
 metacell_obj<-readRDS(paste0(indir,"/metacells_obj_k15_mincell40_maxsh3_corrected.rds"))
 count<-metacell_obj@assays$RNA$count
-filtered_genes<-read.csv("../../output/03-aging/07-aged_DEG/count_cpm_filtered_gene.csv")
+filtered_genes<-read.csv("../../output/03.Aging_Mouse/07-aged_DEG/count_cpm_filtered_gene.csv")
 count<-count[filtered_genes$x,]
 info<-data.frame(row.names=colnames(metacell_obj),class=metacell_obj$lt_twice_subclass,age=metacell_obj$age)
 subclass<-unique(info$class)
@@ -41,8 +41,8 @@ for(cl in subclass){
 
 }
 
-write.csv(total_result,"../../output/03-aging/07-aged_DEG/Deseq_total_result_k15_corrected.csv")
-write.csv(statistics,"../../output/03-aging/07-aged_DEG/Deseq_statistics_k15_corrected.csv",row.names=F)
+write.csv(total_result,"../../output/03.Aging_Mouse/07-aged_DEG/Deseq_total_result_k15_corrected.csv")
+write.csv(statistics,"../../output/03.Aging_Mouse/07-aged_DEG/Deseq_statistics_k15_corrected.csv",row.names=F)
 
 filter_result<-total_result[abs(as.numeric(total_result$log2FoldChange))>1&as.numeric(total_result$padj)<0.05,]
 filter_result<-filter_result[complete.cases(filter_result),]

@@ -15,12 +15,14 @@ merged.seuratobj.sct=readRDS(paste0(indir,"/integrated_selected_brain_region_of_
 our.df <- as.matrix(merged.seuratobj.sct@assays$RNA$counts)[,which(merged.seuratobj.sct$source == "our")]
 our.seuratobj <- CreateSeuratObject(our.df)
 our.seuratobj  <- NormalizeData(our.seuratobj , verbose = FALSE)
-metainfo<-read.csv("../../output/03-aging/mouse_young_and_old.metainfo.csv",row.names=1)
-# identical(rownames(metainfo),gsub(".*@@_","",colnames(our.seuratobj)))
-our.seuratobj$age<-metainfo$age
-our.seuratobj$lt_twice_class<-metainfo$lt_twice_class
-our.seuratobj$lt_twice_subclass<-metainfo$lt_twice_subclass
-saveRDS(our.seuratobj,paste0(outdir,"/our_seurat.rds"))
+metainfo<-read.csv("../../04data/02.metainfo/03.Aging_Mouse/RNA_DNA_match_name_QC.aged.csv",row.names=1)
+metainfo<-metainfo[metainfo$RNA_QC==1,]
+metainfo<-metainfo[gsub(".*@@_","",colnames(our.seuratobj)),]
+# identical(colnames(our.seuratobj),rownames(metainfo))
+our.seuratobj$age<-metainfo$old_young
+our.seuratobj$lt_twice_class<-metainfo$class_label
+our.seuratobj$lt_twice_subclass<-metainfo$subclass_label
+saveRDS(our.seuratobj,paste0(outdir,"/Joint_Cabernet_seurat.rds"))
 #preprocessing
 our.seuratobj <- SCTransform(object = our.seuratobj)
 our.seuratobj <- FindVariableFeatures(our.seuratobj , selection.method = "vst", nfeatures = 3000)
@@ -29,7 +31,7 @@ our.seuratobj <- RunUMAP(our.seuratobj , dims=1:30, dim.embed=5, reduction="pca"
 our.seuratobj <- RunTSNE(our.seuratobj , dims=1:30, dim.embed=3, perplexity=25)
 our.seuratobj <- FindNeighbors(our.seuratobj , dims=1:30, reduction="pca")
 our.seuratobj <- FindClusters(our.seuratobj)
-saveRDS(our.seuratobj,paste0(outdir,"/our_seruat_with_cluster_corrected.rds"))
+saveRDS(our.seuratobj,paste0(outdir,"/Joint_Cabernet_seruat_with_cluster_corrected.rds"))
 
 
 
@@ -45,4 +47,4 @@ RNA_filter_cpm_genes<-rownames(RNA_cpm)[rowSums(RNA_cpm>0.5)>=2]
 
 filtered_genes<-intersect(RNA_filter_count_genes,RNA_filter_cpm_genes)
 #The crossover gene is the result of RNA_filter_count_genes, which filters out the remaining genes.
-write.csv(filtered_genes,"../../output/03-aging/07-aged_DEG/count_cpm_filtered_gene.csv",row.names=F)
+write.csv(filtered_genes,"../../output/03.Aging_Mouse/07-aged_DEG/count_cpm_filtered_gene.csv",row.names=F)
