@@ -1,6 +1,3 @@
-### Joint_Cabernet_brain_slice_raw_count.without_QC_filter.rds: 
-Joint-Cabernet brain slice RNA raw count matrix without QC filter. The rows are genes and the columns are 11520 samples.
-
 ### subset.z_axis_located_on_7.33.cortex_and_hippo.rds: 
 The RNA raw count matrix from Zhuang's dataset after Z-coordinate filtering (7.33 < z < 7.34) and brain region filtering (hippocampus and cortex only).
 
