@@ -1,6 +1,3 @@
-### old_mouse.raw_count.without_QC_filter.rds: 
-Joint-Cabernet RNA raw count matrix without QC filter of aged mouse. The rows are genes and the columns are samples.
-
 ### TSO-joint.RNA_QC_stat.aged.csv: 
 RNA metainfo of 86496 Joint-Cabernet cells, containing: 
 (1) QC stat information used for quality control filter, QC (1 means pass, and 0 means fail), (2) Unique_ID for pairing with the other samples of the same cell, 
