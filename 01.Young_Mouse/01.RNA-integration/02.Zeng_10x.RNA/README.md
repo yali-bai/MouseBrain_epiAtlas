@@ -1,2 +1,0 @@
-#### 01-scRNAseq.R: 
-This script performs quality control and preprocessing of single-cell RNA-seq expression matrices using Seurat. It supports both batch processing through a metadata file and single-sample analysis via command-line input. The pipeline reads downsampled count matrices, filters for valid gene IDs based on a mouse genome reference, standardizes gene identifiers, and creates Seurat objects with basic quality control visualizations. Output includes annotated Seurat RDS objects, gene name mappings, and QC plots.
