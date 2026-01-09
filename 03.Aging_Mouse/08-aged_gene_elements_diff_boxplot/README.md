@@ -1,2 +1,0 @@
-01-data_prepare_for_GE_mean_methy_level_in_each_cell.py: Calculating the average methylation rate of gene elements in each subclass.
-02-aging_diff_gene_elements_boxplot.r: Plotting the boxplot of the difference between aging and youth in the methylation rate of gene elements.
